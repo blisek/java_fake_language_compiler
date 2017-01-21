@@ -1,12 +1,12 @@
 package com.blisek.compiler_jftt.context;
 
-public class MemoryAllocation {
+public class MemoryAllocationInfo {
 	private static int idCounter = 0;
 	private final int id;
 	private int size;
 	private int useCounter;
 	
-	public MemoryAllocation(int size) {
+	public MemoryAllocationInfo(int size) {
 		super();
 		this.id = idCounter++;
 		this.size = size;

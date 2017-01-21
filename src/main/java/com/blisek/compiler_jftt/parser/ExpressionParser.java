@@ -36,43 +36,43 @@ public class ExpressionParser extends Parser {
 			new Action() {	// [1] expr = expr.a MULT expr.b
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_a = _symbols[offset + 1];
-					final Expression a = (Expression) _symbol_a.value;
+					final Expr a = (Expr) _symbol_a.value;
 					final Symbol _symbol_b = _symbols[offset + 3];
-					final Expression b = (Expression) _symbol_b.value;
+					final Expr b = (Expr) _symbol_b.value;
 					 return new MultExpr (a, b);
 				}
 			},
 			new Action() {	// [2] expr = expr.a DIV expr.b
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_a = _symbols[offset + 1];
-					final Expression a = (Expression) _symbol_a.value;
+					final Expr a = (Expr) _symbol_a.value;
 					final Symbol _symbol_b = _symbols[offset + 3];
-					final Expression b = (Expression) _symbol_b.value;
+					final Expr b = (Expr) _symbol_b.value;
 					 return new DivExpr  (a, b);
 				}
 			},
 			new Action() {	// [3] expr = expr.a PLUS expr.b
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_a = _symbols[offset + 1];
-					final Expression a = (Expression) _symbol_a.value;
+					final Expr a = (Expr) _symbol_a.value;
 					final Symbol _symbol_b = _symbols[offset + 3];
-					final Expression b = (Expression) _symbol_b.value;
+					final Expr b = (Expr) _symbol_b.value;
 					 return new PlusExpr (a, b);
 				}
 			},
 			new Action() {	// [4] expr = expr.a MINUS expr.b
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_a = _symbols[offset + 1];
-					final Expression a = (Expression) _symbol_a.value;
+					final Expr a = (Expr) _symbol_a.value;
 					final Symbol _symbol_b = _symbols[offset + 3];
-					final Expression b = (Expression) _symbol_b.value;
+					final Expr b = (Expr) _symbol_b.value;
 					 return new MinusExpr(a, b);
 				}
 			},
 			new Action() {	// [5] expr = MINUS expr.e
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_e = _symbols[offset + 2];
-					final Expression e = (Expression) _symbol_e.value;
+					final Expr e = (Expr) _symbol_e.value;
 					 return new NegExpr  (e);
 				}
 			},
@@ -86,7 +86,7 @@ public class ExpressionParser extends Parser {
 			new Action() {	// [7] expr = LPAREN pexpr.e RPAREN
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_e = _symbols[offset + 2];
-					final Expression e = (Expression) _symbol_e.value;
+					final Expr e = (Expr) _symbol_e.value;
 					 return e;
 				}
 			},
