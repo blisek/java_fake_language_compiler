@@ -1,0 +1,69 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.blisek</groupId>
+  <artifactId>compiler-jftt</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Compiler</name>
+  <description>-</description>
+  
+  <properties>
+  	<java.version>1.8</java.version>
+  	<maven.compiler.source>1.8</maven.compiler.source>
+  	<maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+  	<dependency>
+  		<groupId>net.sf.beaver</groupId>
+  		<artifactId>beaver</artifactId>
+  		<version>0.9.10</version>
+  		<scope>system</scope>
+  		<systemPath>${project.basedir}/lib/beaver-cc-0.9.11.jar</systemPath>
+  	</dependency>
+  	<dependency>
+  		<groupId>de.jflex</groupId>
+  		<artifactId>jflex</artifactId>
+  		<version>1.6.1</version>
+  		<scope>system</scope>
+  		<systemPath>${project.basedir}/lib/jflex-1.6.1.jar</systemPath>
+  	</dependency>
+  </dependencies>
+  
+  <build>
+  	<plugins>
+  		<!--<plugin>
+  			<artifactId>maven-antrun-plugin</artifactId>
+  			<version>1.6</version>
+  			<executions>
+  				<execution>
+  					<id>Generate scanner</id>
+  					<phase>generate-sources</phase>
+  					<configuration>
+  						<target>
+  							<exec executable="cmd">
+  								<arg value="generate.bat" />
+  							</exec>
+  						</target>
+  					</configuration>
+  				</execution>
+  			</executions>
+  		</plugin> -->
+		<plugin>
+		  <artifactId>exec-maven-plugin</artifactId>
+		  <groupId>org.codehaus.mojo</groupId>
+		  <executions>
+		    <execution><!-- Run our version calculation script -->
+		      <id>Generate scanner</id>
+		      <phase>generate-sources</phase>
+		      <goals>
+		        <goal>exec</goal>
+		      </goals>
+		      <configuration>
+		        <executable>${basedir}/scripts/generate.bat</executable>
+		      </configuration>
+		    </execution>
+		  </executions>
+		</plugin>
+  	</plugins>
+  </build>
+</project>
