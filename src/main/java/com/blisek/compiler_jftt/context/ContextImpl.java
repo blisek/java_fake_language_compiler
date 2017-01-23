@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 
 import com.blisek.compiler_jftt.ast.OperationsHelper;
+import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.writer.Writer;
 import com.blisek.compiler_jftt.writer.WriterImpl;
 
@@ -44,23 +45,23 @@ public class ContextImpl implements Context {
 		return Optional.ofNullable(labelsAssociations.get(label));
 	}
 
-	@Override
-	public Register reserveRegister(Writer writer, boolean restoreOnLevelChange) {
-		final Register register = chooseRegisterForTake();
-		final int currentLevel = getLevel();
-		final int storedCellId = OperationsHelper.storeRegister(this, null, register);
-		if(restoreOnLevelChange) {
-			valueRestoreListener.add((from, to, ctx) -> {
-				if(from == currentLevel && to < from) {
-					OperationsHelper.loadRegister(this, register, storedCellId);
-					return true;
-				}
-				return false;
-			});
-		}
-		register.setUsedByLevel(currentLevel);
-		return register;
-	}
+//	@Override
+//	public Register reserveRegister(Writer writer, boolean restoreOnLevelChange) {
+//		final Register register = chooseRegisterForTake();
+//		final int currentLevel = getLevel();
+//		final int storedCellId = OperationsHelper.storeRegister(this, null, register);
+//		if(restoreOnLevelChange) {
+//			valueRestoreListener.add((from, to, ctx) -> {
+//				if(from == currentLevel && to < from) {
+//					OperationsHelper.loadRegister(this, register, storedCellId);
+//					return true;
+//				}
+//				return false;
+//			});
+//		}
+//		register.setUsedByLevel(currentLevel);
+//		return register;
+//	}
 
 	private Register chooseRegisterForTake() {
 		Optional<Register> freeRegister = Arrays.stream(registers).filter(r -> !r.isTaken()).findFirst();
@@ -103,10 +104,10 @@ public class ContextImpl implements Context {
 	}
 
 	@Override
-	public int allocMemory(int size) {
+	public MemoryAllocationInfo allocMemory(int size) {
 		int tmp = nextFreeMemoryCell;
 		nextFreeMemoryCell += size;
-		return tmp;
+		return new MemoryAllocationInfo(tmp, size);
 	}
 
 //	@Override
@@ -131,6 +132,11 @@ public class ContextImpl implements Context {
 		return writer;
 	}
 	
+	@Override
+	public Register[] getRegisters() {
+		return registers;
+	}
+
 	private void notifyValueRestoreListener(int oldLevel, int newLevel) {
 		ListIterator<ChangeLevelListener> it = valueRestoreListener.listIterator();
 		while(it.hasNext()) {

@@ -2,6 +2,7 @@ package com.blisek.compiler_jftt.context;
 
 import java.util.Optional;
 
+import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.writer.Writer;
 
 public interface Context {
@@ -10,7 +11,9 @@ public interface Context {
 	
 	Optional<Integer> getLineForLabel(int label);
 	
-	Register reserveRegister(Writer writer, boolean restorePreviousValueOnLevelChange);
+//	Register reserveRegister(Writer writer, boolean restorePreviousValueOnLevelChange);
+	
+	Register[] getRegisters();
 	
 //	void addChangeLevelListener(ChangeLevelListener changeLevelListener);
 	
@@ -26,7 +29,7 @@ public interface Context {
 	
 	int getLevel();
 	
-	int allocMemory(int size);
+	MemoryAllocationInfo allocMemory(int size);
 	
 	Writer getWriter();
 }

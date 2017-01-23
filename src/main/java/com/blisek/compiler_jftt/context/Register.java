@@ -2,12 +2,16 @@ package com.blisek.compiler_jftt.context;
 
 import java.math.BigInteger;
 
+import com.blisek.compiler_jftt.structs.ValueType;
+import com.blisek.compiler_jftt.structs.VariableInfo;
+
 public class Register {
 	private final int id;
 	private boolean taken;
 	private int usedByLevel;
 	private boolean isCounter, isHelpRegister;
-	private BigInteger value;
+	private Object value;
+	private ValueType valueType;
 	
 	public Register(int id) {
 		super();
@@ -16,6 +20,7 @@ public class Register {
 		this.usedByLevel = -1;
 		this.isCounter = false;
 		this.isHelpRegister = false;
+		this.valueType = ValueType.UNKNOWN;
 	}
 	
 	public Register(int id, long value) {
@@ -56,12 +61,22 @@ public class Register {
 		this.isCounter = isCounter;
 	}
 
-	public BigInteger getValue() {
+	public Object getValue() {
 		return value;
 	}
 
-	public void setValue(BigInteger value) {
+	public void setValue(Object value) {
 		this.value = value;
+		Class<?> valueClass = value.getClass();
+		if(valueClass == BigInteger.class) {
+			this.valueType = ValueType.NUMERIC;
+		}
+		else if (valueClass == VariableInfo.class) {
+			this.valueType = ValueType.VARIABLE;
+		}
+		else {
+			this.valueType = ValueType.UNKNOWN;
+		}
 	}
 
 	public boolean isHelpRegister() {
@@ -71,7 +86,13 @@ public class Register {
 	public void setHelpRegister(boolean isHelpRegister) {
 		this.isHelpRegister = isHelpRegister;
 	}
-	
-	
+
+	public ValueType getValueType() {
+		return valueType;
+	}
+
+//	public void setValueType(ValueType valueType) {
+//		this.valueType = valueType;
+//	}
 	
 }

@@ -1,45 +1,68 @@
 package com.blisek.compiler_jftt.ast;
 
 import java.math.BigInteger;
+import java.util.Objects;
 
 import com.blisek.compiler_jftt.context.Context;
 import com.blisek.compiler_jftt.context.Register;
+import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
+import com.blisek.compiler_jftt.structs.ValueType;
 import com.blisek.compiler_jftt.writer.Instructions;
 import com.blisek.compiler_jftt.writer.Writer;
 
 public class OperationsHelper {
 	
 	public static void changeValue(Context ctx, Register reg, long value) {
-		BigInteger bi = reg.getValue();
+//		BigInteger bi = reg.getValue();
 		// TODO: implement this
-		if(bi == null)
-			changeValueUnknown(ctx, reg, value);
-		else
-			changeValueKnown(ctx, reg, value);
+//		if(bi == null)
+//			changeValueUnknown(ctx, reg, value);
+//		else
+//			changeValueKnown(ctx, reg, value);
 		changeValueUnknown(ctx, reg, value);
 	}
 
-	private static void changeValueKnown(Context ctx, Register reg, long value) {
-		if(reg.getValue().longValue() == value)
-			return;
-		
-		// TODO: implement correct way
-		changeValueUnknown(ctx, reg, value);
-	}
+//	private static void changeValueKnown(Context ctx, Register reg, long value) {
+//		if(reg.getValue().longValue() == value)
+//			return;
+//		
+//		// TODO: implement correct way
+//		changeValueUnknown(ctx, reg, value);
+//	}
 
 	private static void changeValueUnknown(Context ctx, Register reg, long value) {
 		setRegisterValue(ctx, reg, value);
 	}
 
-	public static int storeRegister(Context ctx, Writer _writer, Register register) {
-		int cellId = ctx.allocMemory(1);
+	public static MemoryAllocationInfo storeRegister(Context ctx, Writer _writer, Register register) {
+		MemoryAllocationInfo cell = ctx.allocMemory(1);
 		
 		Writer writer = ctx.getWriter();
 		Register helperRegister = ctx.getHelperRegister();
-		changeValue(ctx, helperRegister, cellId);
+		changeValue(ctx, helperRegister, cell.getStartCell());
 		writer.write(generateOneArgumentInstruction(Instructions.STORE_i, register));
 		
-		return cellId;
+		return cell;
+	}
+	
+	public static void storeRegisterValue(Context ctx, Register register, MemoryAllocationInfo destinationCell, int offset) {
+		Objects.requireNonNull(ctx, "context can't be null");
+		Objects.requireNonNull(register, "register can't be null");
+		Objects.requireNonNull(destinationCell, "destinationCell can't be null");
+		
+		
+		Writer writer = ctx.getWriter();
+		int cell = destinationCell.getStartCell() + offset;
+		Register helpRegister = ctx.getHelperRegister();
+		if(register.getId() == helpRegister.getId() && helpRegister.getValueType() == ValueType.NUMERIC) {
+			if(((BigInteger)helpRegister.getValue()).longValue() != cell) {				
+				if(register.isHelpRegister())
+					throw new IllegalStateException("Used for store register is help register. Operation is unallowed");
+			}
+		}
+		
+		setRegisterValue(ctx, helpRegister, cell);
+		writer.write(generateOneArgumentInstruction(Instructions.STORE_i, register));
 	}
 	
 	public static void loadRegister(Context ctx, Register register, int cell) {
