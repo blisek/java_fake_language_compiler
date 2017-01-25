@@ -54,6 +54,15 @@ public class WriterImpl implements Writer {
 		}
 	}
 	
+	
+	
+	@Override
+	public int getNextLineNumber() {
+		return lineCounter;
+	}
+
+
+
 	private static class WriteCandidate {
 		private final int jumpDestination;
 		private final String instruction;

@@ -20,28 +20,25 @@ public class MultiplyExpression extends VelocityExpression {
 	}
 
 	public MultiplyExpression(Expression left, Expression right) {
-		super(new Expression[] { left, right });
+		super(left, right);
 	}
 
 	public MultiplyExpression(int label, Expression left, Expression right) {
-		super(label, new Expression[] { left, right });
+		super(label, left, right);
 	}
 
 	@Override
-	public int write(Writer writer, Context ctx) {
-		// TODO Auto-generated method stub
-		final String lineSeparator = System.lineSeparator();
-		Collection<Register> reservedRegisters = new ArrayList<Register>(3);
-		VelocityContext velCtx = new VelocityContext();
-		velCtx.put("nl", lineSeparator);
-		velCtx.put("reg", reservedRegisters.stream().map(Register::getId)
-				.toArray(itSize -> new Integer[itSize]));
-		StringWriter stringWriter = new StringWriter();
-		multiplyTemplate.merge(velCtx, stringWriter);
-		String[] generatedLines = stringWriter.toString().split(lineSeparator);
+	public void setUpVelocityContext(VelocityContext vCtx) {
+		// TODO reserve registers
 		
-		return 0;
 	}
+
+	@Override
+	public Template getTemplate() {
+		return multiplyTemplate;
+	}
+
+	
 	
 	
 
