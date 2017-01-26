@@ -1,9 +1,10 @@
 %package "com.blisek.compiler_jftt.parser";
 %import "com.blisek.compiler_jftt.ast.*";
+%import "com.blisek.compiler_jftt.structs.*";
 %import "java.math.BigInteger";
 %class "ExpressionParser";
 
-%terminals NUMBER, ZERO, ONE, SEMIC, VAR, BEGIN;
+%terminals NUMBER, ZERO, ONE, SEMIC, VAR, BEGIN, EOF, PIDENTIFIER;
 %terminals END, MULT, DIV, PLUS, MINUS, MOD;
 %terminals IF, THEN, ELSE, ENDIF, WHILE, DO, ENDWHILE;
 %terminals FOR, FROM, TO, DOWNTO, ENDFOR, READ, WRITE, SKIP;
@@ -14,36 +15,32 @@
 %left  PLUS, MINUS;
 
 %typeof NUMBER = "BigInteger";
-%typeof pidentifier = "String";
-%typeof program, vdeclarations, commands, command, expression = "Expression";
-%typeof addition, subtraction, multiplication, division, modulo = "Expression";
-%typeof condition, value, identifier = "Expression";
+%typeof PIDENTIFIER = "String";
+%typeof program, commands, command, expression = "Expression";
+%typeof addition = "Expression";
+%typeof subtraction = "Expression";
+%typeof multiplication = "Expression";
+%typeof division = "Expression";
+%typeof modulo = "Expression";
+%typeof value, identifier = "ValueExpression";
 
 %goal program;
 
 
 program       
-					= VAR vdeclarations BEGIN commands END
-
-vdeclarations 				
-					= vdeclarations pidentifier
-               		| vdeclarations pidentifier LBRACKET NUMBER RBRACKET
-               		; 
+					= BEGIN commands END
+					;
 
 commands    
-					= commands command
-             		| command
+					= commands.s command.c	{: return new Expression(s, c); :}
+             		| command.c				{: return c; :} 
              		;
 
 command     
-					= identifier ASSIGN expression SEMIC
-             		| IF condition THEN commands ELSE commands ENDIF
-             		| WHILE condition DO commands ENDWHILE
-             		| FOR pidentifier FROM value TO value DO commands ENDFOR
-             		| FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
-             		| READ identifier SEMIC
-             		| WRITE value SEMIC
-             		| SKIP SEMIC
+					= identifier.i ASSIGN expression.e SEMIC {: return new AssignmentExpression(i, e); :}
+             		| READ identifier.i SEMIC {: return new ReadExpression(i); :}
+             		| WRITE value.v SEMIC {: return new WriteExpression(v); :}
+             		| SKIP SEMIC {: return new SkipExpression(); :}
              		;
 
 expression  		
@@ -56,57 +53,47 @@ expression
              		;
              		
 addition
-					= value PLUS ZERO
-					| ZERO PLUS value
-					| value PLUS value
+					= value.v PLUS ZERO			{: return v; :}
+					| ZERO PLUS value.v			{: return v; :}
+					| value.v1 PLUS value.v2	{: return new AdditionExpression(v1, v2); :}
 					;
 
 subtraction
-					= value MINUS ZERO
-					| ZERO MINUS value
-					| value MINUS value
+					= value.v MINUS ZERO		{: return v; :}
+					| ZERO MINUS value			{: return new NumberValueExpression(BigInteger.ZERO); :}
+					| value.v1 MINUS value.v2	{: return new SubtractionExpression(v1, v2); :}
 					;
 
 multiplication
-					= value MULT ZERO
-					| ZERO MULT value
-					| value MULT ONE
-					| ONE MULT value
-					| value MULT value
+					= value MULT ZERO			{: return new NumberValueExpression(BigInteger.ZERO); :}
+					| ZERO MULT value			{: return new NumberValueExpression(BigInteger.ZERO); :}
+					| value.v MULT ONE			{: return v; :}
+					| ONE MULT value.v			{: return v; :} 
+					| value.v1 MULT value.v2	{: return new MultiplyExpression(v1, v2); :}
 					;
 					
 division
-					= value DIV ZERO
-					| ZERO DIV value
-					| value DIV ONE
-					| value DIV value
+					= value DIV ZERO			{: return new NumberValueExpression(BigInteger.ZERO); :}
+					| ZERO DIV value			{: return new NumberValueExpression(BigInteger.ZERO); :}
+					| value.v DIV ONE			{: return v; :}
+					| value.v1 DIV value.v2		{: return new DivisionExpression(v1, v2); :}
 					; 
 				
 modulo
-					= value MOD ZERO
-					| value MOD ONE
-					| ZERO MOD value
-					| ONE MOD value
-					| value MOD value
+					= value MOD ZERO			{: return new NumberValueExpression(BigInteger.ZERO); :}
+					| value.v MOD ONE			{: return v; :} 
+					| ZERO MOD value			{: return new NumberValueExpression(BigInteger.ZERO); :}
+					| ONE MOD value				{: return new NumberValueExpression(BigInteger.ONE); :}
+					| value.v1 MOD value.v2		{: return new ModuloExpression(v1, v2); :}
 					;
 
-condition   
-					= value EQ value
-             		| value NEQ value
-             		| value LT value
-             		| value GT value
-             		| value LE value
-             		| value GE value
-             		;
-
 value       
-					= NUMBER
+					= NUMBER.n					{: return new NumberValueExpression(n); :}
              		| identifier
              		;
 
 identifier  
-					= pidentifier
-             		| pidentifier LBRACKET pidentifier RBRACKET
-             		| pidentifier LBRACKET NUMBER RBRACKET
+					= PIDENTIFIER.p 			{: return new VariableValueExpression(new VariableInfo(p)); :}
              		;
+
     

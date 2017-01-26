@@ -1,0 +1,112 @@
+%package "com.blisek.compiler_jftt.parser";
+%import "com.blisek.compiler_jftt.ast.*";
+%import "java.math.BigInteger";
+%class "ExpressionParser";
+
+%terminals NUMBER, ZERO, ONE, SEMIC, VAR, BEGIN;
+%terminals END, MULT, DIV, PLUS, MINUS, MOD;
+%terminals IF, THEN, ELSE, ENDIF, WHILE, DO, ENDWHILE;
+%terminals FOR, FROM, TO, DOWNTO, ENDFOR, READ, WRITE, SKIP;
+%terminals LBRACKET, RBRACKET, ASSIGN;
+%terminals EQ, NEQ, LT, GT, LE, GE;
+
+%left  MULT, DIV, MOD;
+%left  PLUS, MINUS;
+
+%typeof NUMBER = "BigInteger";
+%typeof pidentifier = "String";
+%typeof program, vdeclarations, commands, command, expression = "Expression";
+%typeof addition, subtraction, multiplication, division, modulo = "Expression";
+%typeof condition, value, identifier = "Expression";
+
+%goal program;
+
+
+program       
+					= VAR vdeclarations BEGIN commands END
+
+vdeclarations 				
+					= vdeclarations pidentifier
+               		| vdeclarations pidentifier LBRACKET NUMBER RBRACKET
+               		; 
+
+commands    
+					= commands command
+             		| command
+             		;
+
+command     
+					= identifier ASSIGN expression SEMIC
+             		| IF condition THEN commands ELSE commands ENDIF
+             		| WHILE condition DO commands ENDWHILE
+             		| FOR pidentifier FROM value TO value DO commands ENDFOR
+             		| FOR pidentifier FROM value DOWNTO value DO commands ENDFOR
+             		| READ identifier SEMIC
+             		| WRITE value SEMIC
+             		| SKIP SEMIC
+             		;
+
+expression  		
+					= value
+             		| addition
+             		| subtraction
+             		| multiplication
+             		| division
+             		| modulo
+             		;
+             		
+addition
+					= value PLUS ZERO
+					| ZERO PLUS value
+					| value PLUS value
+					;
+
+subtraction
+					= value MINUS ZERO
+					| ZERO MINUS value
+					| value MINUS value
+					;
+
+multiplication
+					= value MULT ZERO
+					| ZERO MULT value
+					| value MULT ONE
+					| ONE MULT value
+					| value MULT value
+					;
+					
+division
+					= value DIV ZERO
+					| ZERO DIV value
+					| value DIV ONE
+					| value DIV value
+					; 
+				
+modulo
+					= value MOD ZERO
+					| value MOD ONE
+					| ZERO MOD value
+					| ONE MOD value
+					| value MOD value
+					;
+
+condition   
+					= value EQ value
+             		| value NEQ value
+             		| value LT value
+             		| value GT value
+             		| value LE value
+             		| value GE value
+             		;
+
+value       
+					= NUMBER
+             		| identifier
+             		;
+
+identifier  
+					= pidentifier
+             		| pidentifier LBRACKET pidentifier RBRACKET
+             		| pidentifier LBRACKET NUMBER RBRACKET
+             		;
+    

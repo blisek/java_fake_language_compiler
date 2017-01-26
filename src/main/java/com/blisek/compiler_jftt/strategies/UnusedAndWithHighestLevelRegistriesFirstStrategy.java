@@ -14,12 +14,15 @@ import com.blisek.compiler_jftt.structs.ValueType;
 public class UnusedAndWithHighestLevelRegistriesFirstStrategy implements RegistryManagementStrategy {
 
 	@Override
-	public RegisterReservationInfo reserveRegister(Context ctx, boolean restoreValueWhenReleasing, Collection<Integer> excludeRegisters) {
+	public RegisterReservationInfo reserveRegister(Context ctx, MemoryAllocationInfo memoryCell, boolean restoreValueWhenReleasing, Collection<Integer> excludeRegisters) {
 		Register reservedRegister = chooseRegister(ctx, excludeRegisters);
 		ValueType valueType = reservedRegister.getValueType();
 		MemoryAllocationInfo mai = null;
-		if(valueType == ValueType.UNKNOWN || valueType == ValueType.NUMERIC) {
+		if(memoryCell == null && (valueType == ValueType.UNKNOWN || valueType == ValueType.NUMERIC)) {
 			mai = ctx.allocMemory(1);
+		}
+		else if(memoryCell != null) {
+			mai = memoryCell;
 		}
 		reservedRegister.setTaken(true);
 		return new RegisterReservationInfo(ctx, reservedRegister, mai, reservedRegister.getValue(), restoreValueWhenReleasing);
@@ -27,7 +30,7 @@ public class UnusedAndWithHighestLevelRegistriesFirstStrategy implements Registr
 	
 	private Register chooseRegister(Context ctx, final Collection<Integer> excludeReg) {
 		final int currentLevel = ctx.getLevel();
-		final Predicate<Register> excludeRegisters = (r -> !excludeReg.contains(r.getId()));
+		final Predicate<Register> excludeRegisters = (r -> excludeReg == null || !excludeReg.contains(r.getId()));
 		// lower level value = higher level
 		final Predicate<Register> onlyHigherLevels = (r -> r.getUsedByLevel() < currentLevel);
 		final Predicate<Register> onlyLowerOrEqualLevels = (r -> r.getUsedByLevel() >= currentLevel);

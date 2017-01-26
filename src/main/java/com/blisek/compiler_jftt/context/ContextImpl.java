@@ -11,17 +11,24 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 
 import com.blisek.compiler_jftt.ast.OperationsHelper;
+import com.blisek.compiler_jftt.strategies.MemoryAllocationStrategy;
+import com.blisek.compiler_jftt.strategies.RegistryManagementStrategy;
+import com.blisek.compiler_jftt.strategies.SimpleMemoryAllocationStrategy;
+import com.blisek.compiler_jftt.strategies.UnusedAndWithHighestLevelRegistriesFirstStrategy;
 import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.writer.Writer;
 import com.blisek.compiler_jftt.writer.WriterImpl;
 
 public class ContextImpl implements Context {
+	public static final int TEMPORARY_MEMORY_CELL_COUNT = 5;
 	private final List<ChangeLevelListener> valueRestoreListener;
 	private final Map<Integer, Integer> labelsAssociations;
 	private final Register[] registers;
 	private final Writer writer;
 	private int level;
 	private int nextFreeMemoryCell;
+	private final RegistryManagementStrategy registryManagementStrategy;
+	private final MemoryAllocationStrategy memoryAllocationStrategy;
 	
 	public ContextImpl(int registersCount) {
 		labelsAssociations = new HashMap<>();
@@ -32,6 +39,8 @@ public class ContextImpl implements Context {
 		level = 0;
 		valueRestoreListener = new ArrayList<>(12);
 		writer = new WriterImpl(this);
+		registryManagementStrategy = new UnusedAndWithHighestLevelRegistriesFirstStrategy();
+		memoryAllocationStrategy = new SimpleMemoryAllocationStrategy(TEMPORARY_MEMORY_CELL_COUNT);
 	}
 
 	@Override
@@ -135,6 +144,16 @@ public class ContextImpl implements Context {
 	@Override
 	public Register[] getRegisters() {
 		return registers;
+	}
+	
+	@Override
+	public RegistryManagementStrategy getRegistryManagementStrategy() {
+		return registryManagementStrategy;
+	}
+
+	@Override
+	public MemoryAllocationStrategy getMemoryAllocationStrategy() {
+		return memoryAllocationStrategy;
 	}
 
 	private void notifyValueRestoreListener(int oldLevel, int newLevel) {

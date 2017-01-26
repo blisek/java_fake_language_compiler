@@ -6,6 +6,8 @@ public class MemoryAllocationInfo implements AutoCloseable {
 	private int startCell;
 	private int size;
 	private int useCounter;
+	private boolean allocated;
+	private int cellStep;
 	
 	public MemoryAllocationInfo(int startCell, int size) {
 		super();
@@ -13,6 +15,9 @@ public class MemoryAllocationInfo implements AutoCloseable {
 		this.startCell = startCell;
 		this.size = size;
 		this.useCounter = 0;
+		this.cellStep = 1;
+		this.allocated = false;
+		
 	}
 	
 	public int getId() {
@@ -53,8 +58,30 @@ public class MemoryAllocationInfo implements AutoCloseable {
 		--useCounter;
 	}
 	
+	public boolean isAllocated() {
+		return allocated;
+	}
+
+	public void setAllocated(boolean allocated) {
+		this.allocated = allocated;
+	}
+
+	public int getCellStep() {
+		return cellStep;
+	}
+	
+	public int getCellAddress(int index) {
+		if(index >= size)
+			return -1;
+		return startCell + cellStep * index;
+	}
+
+	public void setCellStep(int cellStep) {
+		this.cellStep = cellStep;
+	}
+
 	public void free() {
-		// TODO: implement
+		setAllocated(false);
 	}
 
 	@Override

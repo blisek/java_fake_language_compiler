@@ -94,7 +94,38 @@ public class OperationsHelper {
 		reg.setValue(bi);
 	}
 	
+	public static void setRegisterValue(Context ctx, Register reg, String binaryString, BigInteger bi) {
+		Writer writer = ctx.getWriter();
+		
+		writer.write(generateOneArgumentInstruction(Instructions.ZERO_i, reg));
+		for(int i = 0; i < binaryString.length(); ++i) {
+			char c = binaryString.charAt(i);
+			if(c == '0')
+				writer.write(generateOneArgumentInstruction(Instructions.SHL_i, reg));
+			else if(c == '1')
+				writer.write(generateOneArgumentInstruction(Instructions.INC_i, reg));
+			else
+				throw new IllegalArgumentException("Binary string has invalid sign: " + c);
+		}
+		
+		reg.setValue(bi != null ? bi : binaryString);
+	}
+	
 	public static String generateOneArgumentInstruction(String phrase, Register arg) {
 		return String.format(phrase, arg.getId());
+	}
+	
+	public static int calculateInitializationCost(String binaryString) {
+		final int binaryStringLength = binaryString.length();
+		int cost = binaryStringLength - 1;
+		for(int i = 0; i < binaryStringLength; ++i)
+			if(binaryString.charAt(i) == '1')
+				++cost;
+		
+		return cost;
+	}
+	
+	public static int calculateInitializationCost(BigInteger bi) {
+		return calculateInitializationCost(bi.toString(2));
 	}
 }

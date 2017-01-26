@@ -2,6 +2,8 @@ package com.blisek.compiler_jftt.context;
 
 import java.util.Optional;
 
+import com.blisek.compiler_jftt.strategies.MemoryAllocationStrategy;
+import com.blisek.compiler_jftt.strategies.RegistryManagementStrategy;
 import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.writer.Writer;
 
@@ -32,4 +34,8 @@ public interface Context {
 	MemoryAllocationInfo allocMemory(int size);
 	
 	Writer getWriter();
+	
+	RegistryManagementStrategy getRegistryManagementStrategy();
+	
+	MemoryAllocationStrategy getMemoryAllocationStrategy();
 }
