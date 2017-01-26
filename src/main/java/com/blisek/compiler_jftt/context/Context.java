@@ -17,6 +17,8 @@ public interface Context {
 	
 	Register[] getRegisters();
 	
+	Register getRegisterById(int id);
+	
 //	void addChangeLevelListener(ChangeLevelListener changeLevelListener);
 	
 //	Register getCounterRegister();

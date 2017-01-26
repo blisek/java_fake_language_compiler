@@ -6,13 +6,13 @@ import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.writer.Instructions;
 import com.blisek.compiler_jftt.writer.Writer;
 
-public class AdditionExpression extends BiExpression {
+public abstract class BiOperationExpression extends BiExpression {
 
-	public AdditionExpression(Expression expr1, Expression expr2) {
+	public BiOperationExpression(Expression expr1, Expression expr2) {
 		super(expr1, expr2);
 	}
 
-	public AdditionExpression(int label, Expression expr1, Expression expr2) {
+	public BiOperationExpression(int label, Expression expr1, Expression expr2) {
 		super(label, expr1, expr2);
 	}
 
@@ -30,13 +30,14 @@ public class AdditionExpression extends BiExpression {
 			Expression firstExp = getFirstExpression();
 			firstExp.write(writer, ctx);
 			OperationsHelper.setRegisterValue(ctx, ctx.getHelperRegister(), temporaryAlloc.getCellAddress(0));
-			final Register resultRegister = ctx.getRegisterById(firstExp.getResultRegisterId());
-			writer.write(OperationsHelper.generateOneArgumentInstruction(Instructions.ADD_i, resultRegister));
-			setResultRegisterId(resultRegister.getId());
+			writeOperationSpecificInstructions(ctx, firstExp.getResultRegisterId(), secondRegisterId, null, temporaryAlloc);
+			setResultRegisterId(firstExp.getResultRegisterId());
 		}
 		
 		return writer.getNextLineNumber() - startLine;
 	}
 
+	protected abstract void writeOperationSpecificInstructions(Context ctx, int firstRegId, int secondRegId, 
+			MemoryAllocationInfo firstExpMemCell, MemoryAllocationInfo secondExpMemCell);
 	
 }

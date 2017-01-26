@@ -25,6 +25,7 @@ public class UnusedAndWithHighestLevelRegistriesFirstStrategy implements Registr
 			mai = memoryCell;
 		}
 		reservedRegister.setTaken(true);
+		reservedRegister.setUsedByLevel(ctx.getLevel());
 		return new RegisterReservationInfo(ctx, reservedRegister, mai, reservedRegister.getValue(), restoreValueWhenReleasing);
 	}
 	

@@ -28,8 +28,7 @@ public class MultiplyExpression extends VelocityExpression {
 	}
 
 	@Override
-	public void setUpVelocityContext(VelocityContext vCtx) {
-		// TODO reserve registers
+	public void setUpVelocityContext(Context ctx, VelocityContext vCtx) {
 		
 	}
 

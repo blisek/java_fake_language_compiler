@@ -31,7 +31,7 @@ public abstract class VelocityExpression extends Expression {
 		super(label, expressions);
 	}
 	
-	public abstract void setUpVelocityContext(VelocityContext vCtx);
+	public abstract void setUpVelocityContext(Context ctx, VelocityContext vCtx);
 	
 	public abstract Template getTemplate();
 	
@@ -44,7 +44,7 @@ public abstract class VelocityExpression extends Expression {
 		VelocityContext vContext = new VelocityContext();
 		vContext.put(NEW_LINE_VAR_NAME, lineSeparator);
 		vContext.put(CURRENT_LINE_VAR_NAME, writer.getNextLineNumber());
-		setUpVelocityContext(vContext);
+		setUpVelocityContext(ctx, vContext);
 		
 		Template algTemplate = getTemplate();
 		StringWriter strWriter = new StringWriter();

@@ -10,4 +10,11 @@ public class BiExpression extends Expression {
 		super(label, expr1, expr2);
 	}
 
+	public Expression getFirstExpression() {
+		return expressions[0];
+	}
+	
+	public Expression getSecondExpression() {
+		return expressions[1];
+	}
 }

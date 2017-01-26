@@ -33,6 +33,7 @@ public abstract class ValueExpression extends SingleExpression {
 		loadValueIntoRegister(ctx, addressRegister, resultRegister.getRegister());
 		
 		final int lastLine = writer.getNextLineNumber();
+		setResultRegisterId(resultRegister.getRegister().getId());
 		return lastLine - startLine;
 	}
 	

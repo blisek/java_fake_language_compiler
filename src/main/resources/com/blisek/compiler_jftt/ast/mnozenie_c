@@ -1,1 +1,51 @@
-JZERO $reg[0] 38$nlJZERO $reg[1] 38$nlSTORE $reg[0]$nlINC 0$nlSTORE $reg[1]$nlINC $reg[0]$nlSUB $reg[0]$nlJZERO $reg[0] 9$nlJUMP 14$nlLOAD $reg[0]$nlDEC 0$nlLOAD $reg[1]$nlSTORE $reg[0]$nlJUMP 15$nlDEC 0$nlLOAD $reg[0]$nlJODD $reg[1] 18$nlJUMP 22$nlINC 0$nlSTORE $reg[0]$nlDEC 0$nlJUMP 27$nlINC 0$nlZERO $reg[0]$nlSTORE $reg[0]$nlDEC 0$nlLOAD $reg[0]$nlJZERO $reg[1] 38$nlSHL $reg[0]$nlSHR $reg[1]$nlJODD $reg[1] 32$nlJUMP 27$nlSTORE $reg[0]$nlINC 0$nlADD $reg[0]$nlSTORE $reg[0]$nlDEC 0$nlJUMP 26$nlZERO 0$nlINC 0$nlINC 0$nlLOAD $reg[0]
+JZERO $reg[0] $startLine
+#set ($exitJump = $startLine + 38)
+JZERO $reg[1] $exitJump
+STORE $reg[0]
+INC 0
+STORE $reg[1]
+INC $reg[0]
+SUB $reg[0]
+#set ($valueCheckOkJump = $startLine + 9)
+JZERO $reg[0] $valueCheckOkJump
+#set ($valueCheck2Jump = $startLine + 14)
+JUMP $valueCheck2Jump
+LOAD $reg[0]
+DEC 0
+LOAD $reg[1]
+STORE $reg[0]
+#set ($jumpOver1 = $startLine + 15)
+JUMP $jumpOver1
+DEC 0
+LOAD $reg[0]
+#set ($valueCheck3Jump = $startLine + 18)
+JODD $reg[1] $valueCheck3Jump
+#set ($jumpOver2 = $startLine + 22)
+JUMP $jumpOver2
+INC 0
+STORE $reg[0]
+DEC 0
+#set ($jumpOver3 = $startLine + 27)
+JUMP $jumpOver3
+INC 0
+ZERO $reg[0]
+STORE $reg[0]
+DEC 0
+LOAD $reg[0]
+JZERO $reg[1] $exitJump
+SHL $reg[0]
+SHR $reg[1]
+#set ($jumpOver4 = $startLine + 32)
+JODD $reg[1] $jumpOver4
+JUMP $jumpOver3
+STORE $reg[0]
+INC 0
+ADD $reg[0]
+STORE $reg[0]
+DEC 0
+#set ($jumpOver5 = $startLine + 26)
+JUMP $jumpOver5
+ZERO 0
+INC 0
+INC 0
+LOAD $reg[0]

@@ -127,13 +127,25 @@ public class ContextImpl implements Context {
 //		
 //		
 //	}
-
+	
 	@Override
 	public Register getHelperRegister() {
 		return Arrays.stream(registers)
 				.filter(Register::isHelpRegister)
 				.findFirst()
 				.get();
+	}
+
+	@Override
+	public Register getRegisterById(final int id) {
+		Optional<Register> reg =  Arrays.stream(registers)
+				.filter(r -> r.getId() == id)
+				.findFirst();
+		
+		if(reg.isPresent())
+			return reg.get();
+		else
+			return null;
 	}
 
 	@Override
