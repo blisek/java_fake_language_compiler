@@ -9,7 +9,7 @@ public class Register {
 	private final int id;
 	private boolean taken;
 	private int usedByLevel;
-	private boolean isCounter, isHelpRegister;
+	private boolean isHelpRegister;
 	private Object value;
 	private ValueType valueType;
 	
@@ -18,8 +18,8 @@ public class Register {
 		this.id = id;
 		this.taken = false;
 		this.usedByLevel = -1;
-		this.isCounter = false;
 		this.isHelpRegister = false;
+		this.value = null;
 		this.valueType = ValueType.UNKNOWN;
 	}
 	
@@ -52,15 +52,7 @@ public class Register {
 	public int getId() {
 		return id;
 	}
-
-	public boolean isCounter() {
-		return isCounter;
-	}
-
-	public void setCounter(boolean isCounter) {
-		this.isCounter = isCounter;
-	}
-
+	
 	public Object getValue() {
 		return value;
 	}

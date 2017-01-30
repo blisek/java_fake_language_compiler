@@ -23,7 +23,7 @@ public class SimpleMemoryAllocationStrategy implements MemoryAllocationStrategy 
 	}
 
 	@Override
-	public MemoryAllocationInfo allocateNormalMemory(int size) {
+	public MemoryAllocationInfo[] allocateNormalMemory(int size) {
 		MemoryAllocationInfo mai = new MemoryAllocationInfo(nextCell, size);
 		if(size > 1) {
 			normalMemory.ensureCapacity(normalMemory.size() + size + 1);
@@ -34,16 +34,16 @@ public class SimpleMemoryAllocationStrategy implements MemoryAllocationStrategy 
 			normalMemory.add(mai);
 		}
 		nextCell += size;
-		return mai;
+		return new MemoryAllocationInfo[] { mai };
 	}
 
 	@Override
-	public MemoryAllocationInfo allocateNearMemory(int size) {
+	public MemoryAllocationInfo[] allocateNearMemory(int size) {
 		return allocateNormalMemory(size);
 	}
 
 	@Override
-	public MemoryAllocationInfo allocateTemporaryMemory() {
+	public MemoryAllocationInfo[] allocateTemporaryMemory() {
 		temporaryMemoryIndex = nextIndex(temporaryMemory, temporaryMemoryIndex);
 		if(temporaryMemoryIndex < 0) {
 			return allocateNearMemory(1);
@@ -51,8 +51,39 @@ public class SimpleMemoryAllocationStrategy implements MemoryAllocationStrategy 
 		else {
 			MemoryAllocationInfo mai = temporaryMemory[temporaryMemoryIndex];
 			mai.setAllocated(true);
-			return mai;
+			return new MemoryAllocationInfo[] { mai };
 		}
+	}
+	
+	@Override
+	public MemoryAllocationInfo[] allocateTemporaryMemory(int size) {
+		int blockStart = -1;
+		for(int i = 0; i <= temporaryMemory.length - size; ++i) {
+			if((blockStart = findContinuousMemoryBlock(temporaryMemory, i, i, size)) >= 0)
+				break;
+		}
+		
+		if(blockStart < 0)
+			return allocateNearMemory(size);
+		
+		temporaryMemoryIndex = blockStart + size - 1;
+		MemoryAllocationInfo[] allocatedBlock = new MemoryAllocationInfo[size];
+		for(int i = 0; i < size; ++i) {
+			allocatedBlock[i] = temporaryMemory[blockStart + i];
+			allocatedBlock[i].setAllocated(true);
+		}
+			
+		return allocatedBlock;
+	}
+	
+	private int findContinuousMemoryBlock(MemoryAllocationInfo[] arr, int startIndex, int index, int countdown) {
+		if(countdown <= 0)
+			return startIndex;
+		
+		if(nextIndex(arr, index) == index)
+			return findContinuousMemoryBlock(arr, startIndex, index+1, countdown-1);
+		else
+			return -1;
 	}
 	
 	private int nextIndex(MemoryAllocationInfo[] arr, int startIndex) {

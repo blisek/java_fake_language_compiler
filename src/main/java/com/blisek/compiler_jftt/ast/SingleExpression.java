@@ -9,5 +9,9 @@ public class SingleExpression extends Expression {
 	public SingleExpression(int label, Expression expression) {
 		super(label, expression);
 	}
+	
+	public Expression getExpression() {
+		return expressions[0];
+	}
 
 }

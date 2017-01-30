@@ -44,7 +44,7 @@ public class WriterImpl implements Writer {
 		for(WriteCandidate wc : writeCandidates) {
 			int jumpDestination = wc.getJumpDestination();
 			if(jumpDestination >= 0) {
-				writer.write(String.format(wc.getInstruction(), wc.getInstruction(), ctx.getLineForLabel(jumpDestination).get()));
+				writer.write(String.format("%s %d", wc.getInstruction(), ctx.getLineForLabel(jumpDestination).get()));
 			}
 			else {
 				writer.write(wc.getInstruction());

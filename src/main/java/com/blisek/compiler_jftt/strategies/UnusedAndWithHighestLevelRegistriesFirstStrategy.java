@@ -2,6 +2,7 @@ package com.blisek.compiler_jftt.strategies;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -14,19 +15,11 @@ import com.blisek.compiler_jftt.structs.ValueType;
 public class UnusedAndWithHighestLevelRegistriesFirstStrategy implements RegistryManagementStrategy {
 
 	@Override
-	public RegisterReservationInfo reserveRegister(Context ctx, MemoryAllocationInfo memoryCell, boolean restoreValueWhenReleasing, Collection<Integer> excludeRegisters) {
+	public RegisterReservationInfo reserveRegister(Context ctx, Collection<Integer> excludeRegisters) {
 		Register reservedRegister = chooseRegister(ctx, excludeRegisters);
-		ValueType valueType = reservedRegister.getValueType();
-		MemoryAllocationInfo mai = null;
-		if(memoryCell == null && (valueType == ValueType.UNKNOWN || valueType == ValueType.NUMERIC)) {
-			mai = ctx.allocMemory(1);
-		}
-		else if(memoryCell != null) {
-			mai = memoryCell;
-		}
 		reservedRegister.setTaken(true);
 		reservedRegister.setUsedByLevel(ctx.getLevel());
-		return new RegisterReservationInfo(ctx, reservedRegister, mai, reservedRegister.getValue(), restoreValueWhenReleasing);
+		return new RegisterReservationInfo(ctx, reservedRegister);
 	}
 	
 	private Register chooseRegister(Context ctx, final Collection<Integer> excludeReg) {
@@ -35,13 +28,14 @@ public class UnusedAndWithHighestLevelRegistriesFirstStrategy implements Registr
 		// lower level value = higher level
 		final Predicate<Register> onlyHigherLevels = (r -> r.getUsedByLevel() < currentLevel);
 		final Predicate<Register> onlyLowerOrEqualLevels = (r -> r.getUsedByLevel() >= currentLevel);
+		final Comparator<Register> registerLevelComparator = (r1, r2) -> Integer.compare(r1.getUsedByLevel(), r2.getUsedByLevel());
 		
 		Optional<Register> upperLevelNoHelperRegister = Arrays.stream(ctx.getRegisters())
 				.filter(excludeRegisters)
 				.filter(pNotHelpRegister)
 				.filter(pNotTaken)
 				.filter(onlyHigherLevels)
-				.findFirst();
+				.min(registerLevelComparator);
 		
 		if(upperLevelNoHelperRegister.isPresent())
 			return upperLevelNoHelperRegister.get();
@@ -51,7 +45,7 @@ public class UnusedAndWithHighestLevelRegistriesFirstStrategy implements Registr
 				.filter(pNotHelpRegister)
 				.filter(pNotTaken)
 				.filter(onlyLowerOrEqualLevels)
-				.findFirst();
+				.min(registerLevelComparator);
 		
 		if(sameLevelNoHelperRegister.isPresent())
 			return sameLevelNoHelperRegister.get();
@@ -60,7 +54,7 @@ public class UnusedAndWithHighestLevelRegistriesFirstStrategy implements Registr
 				.filter(excludeRegisters)
 				.filter(pNotHelpRegister)
 				.filter(onlyHigherLevels)
-				.findAny();
+				.min(registerLevelComparator);
 		
 		if(anyNotHelperHigherLevelRegister.isPresent())
 			return anyNotHelperHigherLevelRegister.get();
@@ -68,7 +62,7 @@ public class UnusedAndWithHighestLevelRegistriesFirstStrategy implements Registr
 		Optional<Register> anyNotHelperRegister = Arrays.stream(ctx.getRegisters())
 				.filter(excludeRegisters)
 				.filter(pNotHelpRegister)
-				.findAny();
+				.min(registerLevelComparator);
 		
 		if(anyNotHelperRegister.isPresent())
 			return anyNotHelperRegister.get();

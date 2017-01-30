@@ -1,0 +1,61 @@
+#set($jump1 = $startLine + 49)
+#set($jump2 = $startLine + 52)
+#set($jump3 = $startLine + 16)
+#set($jump4 = $startLine + 22)
+#set($jump5 = $startLine + 12)
+#set($jump6 = $startLine + 40)
+#set($jump7 = $startLine + 53)
+#set($jump8 = $startLine + 26)
+JZERO $reg1 $jump1
+JZERO $reg2 $jump1
+DEC $reg2
+JZERO $reg2 $jump2
+INC $reg2
+ZERO 0
+INC 0
+STORE $reg1
+INC 0
+STORE $reg2
+ZERO $reg3
+ZERO $reg4
+DEC 0
+SUB $reg2
+JZERO $reg2 $jump3
+JUMP $jump4
+INC 0
+LOAD $reg2
+SHL $reg2
+INC $reg3
+STORE $reg2
+JUMP $jump5
+INC 0
+LOAD $reg2
+SHR $reg2
+STORE $reg2
+INC $reg1
+SUB $reg1
+JZERO $reg1 $jump6
+DEC $reg1
+DEC 0
+STORE $reg1
+SHL $reg4
+INC $reg4
+SHR $reg2
+INC 0
+STORE $reg2
+DEC $reg3
+JZERO $reg3 $jump7
+JUMP $jump8
+DEC 0
+LOAD $reg1
+SHR $reg2
+INC 0
+STORE $reg2
+DEC $reg3
+SHL $reg4
+JZERO $reg3 $jump7
+JUMP $jump8
+ZERO $reg1
+ZERO $reg4
+JUMP $jump7
+ZERO $reg4

@@ -24,14 +24,14 @@ public class VariableValueExpression extends ValueExpression {
 	protected void loadValueIntoRegister(Context ctx, Register addressRegister, Register destinationRegister) {
 		BigInteger val = variable.getValue();
 		MemoryAllocationInfo mai = variable.getAssignedMemoryCell();
-		int cellAddress = mai.getCellAddress(0);
+		BigInteger cellAddress = mai.getCellAddress(BigInteger.ZERO);
 		if(val == null) {
 			OperationsHelper.loadRegister(ctx, destinationRegister, cellAddress);
 		}
 		else {
 			String binaryString = val.toString(2);
-			final int loadCost = 10 + mai.getCellAddress(0);
-			if(OperationsHelper.calculateInitializationCost(binaryString) < loadCost) {
+			final BigInteger loadCost = BigInteger.valueOf(10).add(mai.getCellAddress(0));
+			if(BigInteger.valueOf(OperationsHelper.calculateInitializationCost(binaryString)).compareTo(loadCost) < 0) {
 				OperationsHelper.setRegisterValue(ctx, destinationRegister, binaryString, val);
 			}
 			else {

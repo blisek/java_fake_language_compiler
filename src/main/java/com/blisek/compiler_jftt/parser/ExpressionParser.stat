@@ -16,7 +16,7 @@
 	END: SHIFT; goto 4
 	identifier: SHIFT; goto 6
 	command: SHIFT; goto 5
-4:	EOF: REDUCE program = BEGIN commands END
+4:	EOF: REDUCE program = BEGIN commands.c END
 5:	[any]: REDUCE commands = commands.s command.c
 6:	ASSIGN: SHIFT; goto 7
 7:	PIDENTIFIER: SHIFT; goto 16

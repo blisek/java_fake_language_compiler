@@ -28,7 +28,7 @@
 
 
 program       
-					= BEGIN commands END
+					= BEGIN commands.c END	{: return new ProgramExpression(c); :} 
 					;
 
 commands    

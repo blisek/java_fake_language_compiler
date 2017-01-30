@@ -29,7 +29,7 @@ public abstract class ValueExpression extends SingleExpression {
 		
 		final Register addressRegister = ctx.getHelperRegister();
 		final RegistryManagementStrategy rms = ctx.getRegistryManagementStrategy();
-		final RegisterReservationInfo resultRegister = rms.reserveRegister(ctx, null, false, emptyCollection); 
+		final RegisterReservationInfo resultRegister = rms.reserveRegister(ctx, emptyCollection); 
 		loadValueIntoRegister(ctx, addressRegister, resultRegister.getRegister());
 		
 		final int lastLine = writer.getNextLineNumber();

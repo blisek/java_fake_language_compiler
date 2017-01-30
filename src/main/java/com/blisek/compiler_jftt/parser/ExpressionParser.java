@@ -44,18 +44,18 @@ public class ExpressionParser extends Parser {
 		"tMYvsN8qqhVjD#CFO#BoVtUNtoSgjtcBD$4VBtxpT#qol$277jjrajn$dL02dOgKr9XGvp9" +
 		"8rAZ#gc94KuBcc582TtRo$ZG4QFa5LzwRGG==");
 
-	static final Action RETURN3 = new Action() {
-		public Symbol reduce(Symbol[] _symbols, int offset) {
-			return _symbols[offset + 3];
-		}
-	};
-
 	private final Action[] actions;
 
 	public ExpressionParser() {
 		super(PARSING_TABLES);
 		actions = new Action[] {
-			RETURN3,	// [0] program = BEGIN commands END; returns 'END' although none is marked
+			new Action() {	// [0] program = BEGIN commands.c END
+				public Symbol reduce(Symbol[] _symbols, int offset) {
+					final Symbol _symbol_c = _symbols[offset + 2];
+					final Expression c = (Expression) _symbol_c.value;
+					 return new ProgramExpression(c);
+				}
+			},
 			new Action() {	// [1] commands = commands.s command.c
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_s = _symbols[offset + 1];

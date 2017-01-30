@@ -1,7 +1,10 @@
 package com.blisek.compiler_jftt.ast;
 
+import java.math.BigInteger;
+
 import com.blisek.compiler_jftt.context.Context;
 import com.blisek.compiler_jftt.context.Register;
+import com.blisek.compiler_jftt.structs.Deallocator;
 import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.writer.Instructions;
 import com.blisek.compiler_jftt.writer.Writer;
@@ -25,14 +28,18 @@ public class SubtractionExpression extends BiExpression {
 		secondExp.write(writer, ctx);
 		final int secondRegisterId = secondExp.getResultRegisterId();
 		
-		try(MemoryAllocationInfo temporaryAlloc = ctx.getMemoryAllocationStrategy().allocateTemporaryMemory()) {
-			OperationsHelper.storeRegisterValue(ctx, ctx.getRegisterById(secondRegisterId), temporaryAlloc, 0);
+		MemoryAllocationInfo[] allocatedMemory = ctx.getMemoryAllocationStrategy().allocateTemporaryMemory();
+		try(Deallocator deallocator = Deallocator.of(allocatedMemory)) {
+			
+			MemoryAllocationInfo temporaryAlloc = allocatedMemory[0];
+			OperationsHelper.storeRegisterValue(ctx, ctx.getRegisterById(secondRegisterId), temporaryAlloc, BigInteger.ZERO);
 			Expression firstExp = getFirstExpression();
 			firstExp.write(writer, ctx);
-			OperationsHelper.setRegisterValue(ctx, ctx.getHelperRegister(), temporaryAlloc.getCellAddress(0));
+			OperationsHelper.setRegisterValue(ctx, ctx.getHelperRegister(), temporaryAlloc.getCellAddress(BigInteger.ZERO));
 			final Register resultRegister = ctx.getRegisterById(firstExp.getResultRegisterId());
-			writer.write(OperationsHelper.generateOneArgumentInstruction(Instructions.SUB_i, resultRegister));
+			writer.write(OperationsHelper.genInstruction(Instructions.SUB_i, resultRegister));
 			setResultRegisterId(resultRegister.getId());
+			
 		}
 		
 		return writer.getNextLineNumber() - startLine;

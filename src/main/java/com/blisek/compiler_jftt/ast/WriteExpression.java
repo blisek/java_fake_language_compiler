@@ -1,6 +1,7 @@
 package com.blisek.compiler_jftt.ast;
 
 import com.blisek.compiler_jftt.context.Context;
+import com.blisek.compiler_jftt.writer.Instructions;
 import com.blisek.compiler_jftt.writer.Writer;
 
 public class WriteExpression extends SingleExpression {
@@ -15,8 +16,11 @@ public class WriteExpression extends SingleExpression {
 
 	@Override
 	public int write(Writer writer_, Context ctx) {
-		// TODO: implement
-		return 0;
+		Expression exp = getExpression();
+		final Writer writer = ctx.getWriter();
+		int written = exp.write(writer, ctx);
+		writer.write(OperationsHelper.genInstruction(Instructions.PUT_i, exp.getResultRegisterId()));
+		return written + 1;
 	}
 
 }

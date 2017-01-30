@@ -62,6 +62,8 @@ Identifier = [_a-z]+
 	"-"         { return newToken(Terminals.MINUS); }
 	"%"			{ return newToken(Terminals.MOD); }
 	
+	"BEGIN"		{ return newToken(Terminals.BEGIN); }
+	"END"		{ return newToken(Terminals.END); }
 	"READ"		{ return newToken(Terminals.READ); }
 	"WRITE"		{ return newToken(Terminals.WRITE); }
 	"SKIP"		{ return newToken(Terminals.SKIP); }
