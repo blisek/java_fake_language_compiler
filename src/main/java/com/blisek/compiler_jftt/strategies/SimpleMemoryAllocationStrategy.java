@@ -3,6 +3,7 @@ package com.blisek.compiler_jftt.strategies;
 import java.util.ArrayList;
 
 import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
+import com.blisek.compiler_jftt.structs.VariableInfo;
 
 public class SimpleMemoryAllocationStrategy implements MemoryAllocationStrategy {
 	private final MemoryAllocationInfo[] temporaryMemory;
@@ -76,6 +77,13 @@ public class SimpleMemoryAllocationStrategy implements MemoryAllocationStrategy 
 		return allocatedBlock;
 	}
 	
+	@Override
+	public MemoryAllocationInfo[] allocateMemoryForVariable(VariableInfo vi) {
+		MemoryAllocationInfo[] memAllocInfo = allocateNormalMemory(vi.getLength());
+		vi.setAssignedMemoryCells(memAllocInfo);
+		return memAllocInfo;
+	}
+
 	private int findContinuousMemoryBlock(MemoryAllocationInfo[] arr, int startIndex, int index, int countdown) {
 		if(countdown <= 0)
 			return startIndex;

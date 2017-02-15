@@ -38,8 +38,7 @@ LineTerminator = \r|\n|\r\n
 WhiteSpace     = {LineTerminator} | [ \t\f]
 
 Number = [1-9][:digit:]*
-OnlyZero = [0]{WhiteSpace}+
-OnlyOne = [1]{WhiteSpace}+
+OnlyZero = [0]
 
 Identifier = [_a-z]+
 
@@ -48,9 +47,12 @@ Identifier = [_a-z]+
 {WhiteSpace}+   { /* ignore */ }
 
 <YYINITIAL> {
+	{Number}    {
+					final String yyt = yytext();
+					if("1".equals(yyt)) return newToken(Terminals.ONE, BigInteger.ONE);
+					return newToken(Terminals.NUMBER, new BigInteger(yyt)); 
+				}
 	{OnlyZero} 	{ return newToken(Terminals.ZERO, BigInteger.ZERO); }
-	{OnlyOne} 	{ return newToken(Terminals.ONE, BigInteger.ONE); }
-	{Number}    { return newToken(Terminals.NUMBER, new BigInteger(yytext())); }
 	{Identifier} { return newToken(Terminals.PIDENTIFIER, yytext()); }
 
 	":="		{ return newToken(Terminals.ASSIGN); }
