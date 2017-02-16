@@ -1,4 +1,9 @@
 BEGIN
-a := 1+5;
-WRITE a;
+READ b;
+a := 1+2;
+a := a*3;
+a := a+4;
+a := a*2;
+b := b - a;
+WRITE b;
 END

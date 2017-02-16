@@ -23,20 +23,26 @@ public abstract class ValueExpression extends SingleExpression {
 	protected abstract void loadValueIntoRegister(Context ctx, Register addressRegister, Register destinationRegister);
 
 	@Override
-	public int write(Writer writer_, Context ctx) {
+	public int write(Context ctx, Object additionalData) {
 		final Writer writer = ctx.getWriter();
 		final int startLine = writer.getNextLineNumber();
 		
 		final Register addressRegister = ctx.getHelperRegister();
-		final RegistryManagementStrategy rms = ctx.getRegistryManagementStrategy();
-		final RegisterReservationInfo resultRegister = rms.reserveRegister(ctx, emptyCollection); 
+		@SuppressWarnings("resource")
+		final RegisterReservationInfo resultRegister = 
+				(additionalData instanceof RegisterReservationInfo)
+				? (RegisterReservationInfo)additionalData
+				: reserveWorkingRegister(ctx);
 		loadValueIntoRegister(ctx, addressRegister, resultRegister.getRegister());
 		
-		final int lastLine = writer.getNextLineNumber();
 		setResultRegisterId(resultRegister.getRegister().getId());
-		return lastLine - startLine;
+		return writer.getNextLineNumber() - startLine;
 	}
 	
-	
+	private RegisterReservationInfo reserveWorkingRegister(Context ctx) {
+		final RegistryManagementStrategy rms = ctx.getRegistryManagementStrategy();
+		final RegisterReservationInfo resultRegister = rms.reserveRegister(ctx, emptyCollection);
+		return resultRegister;
+	}
 
 }

@@ -9,21 +9,34 @@ import com.blisek.compiler_jftt.structs.VariableInfo;
 
 public class VariableValueExpression extends ValueExpression {
 	private VariableInfo variable;
+	private BigInteger index;
 
 	public VariableValueExpression(VariableInfo var) {
 		super(null);
 		this.variable = var;
+		this.index = BigInteger.ZERO;
 	}
 
 	public VariableValueExpression(int label, VariableInfo var) {
 		super(label, null);
 		this.variable = var;
 	}
+	
+	public VariableValueExpression(VariableInfo var, BigInteger index) {
+		this(var);
+		this.index = index;
+	}
+	
+	public VariableValueExpression(int label, VariableInfo var, BigInteger index) {
+		this(label, var);
+		this.index = index;
+	}
 
 	@Override
 	protected void loadValueIntoRegister(Context ctx, Register addressRegister, Register destinationRegister) {
 		BigInteger val = variable.getValue();
 		MemoryAllocationInfo[] mai = variable.getAssignedMemoryCells();
+		// TODO: sprawdzanie czy zmienna została zainicjalizowana
 		BigInteger cellAddress = mai[0].getCellAddress(BigInteger.ZERO);
 		if(val == null) {
 			OperationsHelper.loadRegister(ctx, destinationRegister, cellAddress);
@@ -44,5 +57,12 @@ public class VariableValueExpression extends ValueExpression {
 		return variable;
 	}
 
-	
+	public BigInteger getIndex() {
+		return index;
+	}
+
+	public void setIndex(BigInteger index) {
+		this.index = index;
+	}
+
 }

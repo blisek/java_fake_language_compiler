@@ -1,0 +1,14 @@
+BEGIN
+READ a;
+READ b;
+c := a + b;
+d := a - b;
+e := a * b;
+f := a / b;
+g := a % b;
+WRITE c;
+WRITE d;
+WRITE e;
+WRITE f;
+WRITE g;
+END

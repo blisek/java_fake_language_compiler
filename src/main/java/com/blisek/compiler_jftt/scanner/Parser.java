@@ -19,7 +19,7 @@ public class Parser {
 		
 		Expression program = (Expression)parser.parse(scanner);
 		Context context = new ContextImpl(5);
-		program.write(context.getWriter(), context);
+		program.write(context, null);
 		
 		try(FileWriter writer = new FileWriter(outputFile)) {
 			context.getWriter().writeOutput(writer, context);

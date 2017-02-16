@@ -15,10 +15,10 @@ public class WriteExpression extends SingleExpression {
 	}
 
 	@Override
-	public int write(Writer writer_, Context ctx) {
+	public int write(Context ctx, Object additionalData) {
 		Expression exp = getExpression();
 		final Writer writer = ctx.getWriter();
-		int written = exp.write(writer, ctx);
+		int written = exp.write(ctx, null);
 		writer.write(OperationsHelper.genInstruction(Instructions.PUT_i, exp.getResultRegisterId()));
 		return written + 1;
 	}

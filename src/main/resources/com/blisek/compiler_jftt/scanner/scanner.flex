@@ -39,6 +39,7 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 
 Number = [1-9][:digit:]*
 OnlyZero = [0]
+Comment = [\{].*[\}]
 
 Identifier = [_a-z]+
 
@@ -47,6 +48,7 @@ Identifier = [_a-z]+
 {WhiteSpace}+   { /* ignore */ }
 
 <YYINITIAL> {
+	{Comment}	{}
 	{Number}    {
 					final String yyt = yytext();
 					if("1".equals(yyt)) return newToken(Terminals.ONE, BigInteger.ONE);

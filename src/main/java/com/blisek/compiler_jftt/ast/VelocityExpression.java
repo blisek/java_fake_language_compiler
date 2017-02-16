@@ -1,6 +1,7 @@
 package com.blisek.compiler_jftt.ast;
 
 import java.io.StringWriter;
+import java.util.Arrays;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -52,7 +53,7 @@ public abstract class VelocityExpression extends Expression {
 	public void postProcessLines(String[] lines) {}
 
 	@Override
-	public int write(Writer writer_, Context ctx) {
+	public int write(Context ctx, Object additionalData) {
 		final String lineSeparator = System.lineSeparator();
 		final Writer writer = ctx.getWriter();
 		
@@ -66,14 +67,22 @@ public abstract class VelocityExpression extends Expression {
 		final RegisterReservationInfo[] registers = (registersCount > 0) ? 
 				OperationsHelper.getRegisters(ctx, registersCount)
 				: null;
+				
+		VelocityContext vContext = new VelocityContext();
+		setUpContext(ctx, vContext, registers, allocatedMemory);
+		vContext.put(NEW_LINE_VAR_NAME, lineSeparator);
+		vContext.put(START_LINE_VAR_NAME, writer.getNextLineNumber());
 		
-		try(Deallocator registersAllocator = Deallocator.of(registers)) {
+		final int resultRegId = getResultRegisterId();
+		final RegisterReservationInfo[] registersWithoutResultRegister = (registers != null) ?
+					Arrays.stream(registers)
+					.filter(r -> r.getRegister().getId() != resultRegId)
+					.toArray(size -> new RegisterReservationInfo[size])
+				: null;
+		
+		try(Deallocator registersAllocator = Deallocator.of(registersWithoutResultRegister)) {
 			try(Deallocator memoryDeallocator = Deallocator.of(allocatedMemory)) {
 			
-				VelocityContext vContext = new VelocityContext();
-				vContext.put(NEW_LINE_VAR_NAME, lineSeparator);
-				vContext.put(START_LINE_VAR_NAME, writer.getNextLineNumber());
-				setUpContext(ctx, vContext, null, allocatedMemory);
 				
 				Template algTemplate = getTemplate();
 				StringWriter strWriter = new StringWriter();

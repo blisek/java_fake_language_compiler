@@ -3,7 +3,6 @@ package com.blisek.compiler_jftt.ast;
 import java.util.Arrays;
 
 import com.blisek.compiler_jftt.context.Context;
-import com.blisek.compiler_jftt.writer.Writer;
 
 import beaver.Symbol;
 
@@ -29,10 +28,9 @@ public class Expression extends Symbol {
 		return label;
 	}
 
-	public int write(Writer writer_, Context ctx) {
-		final Writer writer = ctx.getWriter();
+	public int write(Context ctx, Object additionalData) {
 		return Arrays.stream(expressions)
-				.mapToInt(exp -> exp.write(writer, ctx))
+				.mapToInt(exp -> exp.write(ctx, additionalData))
 				.sum();
 	}
 

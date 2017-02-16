@@ -11,10 +11,10 @@ public class ProgramExpression extends SingleExpression {
 	}
 
 	@Override
-	public int write(Writer writer_, Context ctx) {
+	public int write(Context ctx, Object additionalData) {
 		Writer writer = ctx.getWriter();
 		Expression commands = getExpression();
-		int linesWritten = commands.write(writer, ctx);
+		int linesWritten = commands.write(ctx, null);
 		writer.write(Instructions.HALT);
 		return linesWritten + 1;
 	}

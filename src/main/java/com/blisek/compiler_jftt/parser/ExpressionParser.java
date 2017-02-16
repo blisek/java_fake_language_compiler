@@ -129,20 +129,18 @@ public class ExpressionParser extends Parser {
 					 return new AdditionExpression(v1, v2);
 				}
 			},
-			new Action() {	// [16] addition = value.v1 PLUS ONE.v2
+			new Action() {	// [16] addition = value.v1 PLUS ONE
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_v1 = _symbols[offset + 1];
 					final ValueExpression v1 = (ValueExpression) _symbol_v1.value;
-					final Symbol v2 = _symbols[offset + 3];
-					 return new AdditionExpression(v1, new NumberValueExpression((BigInteger)v2.value));
+					 return new AdditionExpression(v1, new NumberValueExpression(BigInteger.ONE));
 				}
 			},
-			new Action() {	// [17] addition = ONE.v1 PLUS value.v2
+			new Action() {	// [17] addition = ONE PLUS value.v2
 				public Symbol reduce(Symbol[] _symbols, int offset) {
-					final Symbol v1 = _symbols[offset + 1];
 					final Symbol _symbol_v2 = _symbols[offset + 3];
 					final ValueExpression v2 = (ValueExpression) _symbol_v2.value;
-					 return new AdditionExpression(new NumberValueExpression((BigInteger)v1.value), v2);
+					 return new AdditionExpression(new NumberValueExpression(BigInteger.ONE), v2);
 				}
 			},
 			new Action() {	// [18] subtraction = value.v MINUS ZERO

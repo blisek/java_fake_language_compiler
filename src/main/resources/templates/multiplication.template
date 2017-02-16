@@ -9,8 +9,8 @@
 #set($jump9 = $startLine + 32)
 #set($jump10 = $startLine + 26)
 #set($jump11 = $startLine + 42)
-JZERO 1 $jump1
-JZERO 2 $jump1
+JZERO $reg1 $jump11
+JZERO $reg2 $jump1
 STORE $reg1
 INC 0
 STORE $reg2

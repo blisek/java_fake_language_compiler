@@ -1,17 +1,17 @@
 package com.blisek.compiler_jftt.ast;
 
+import java.math.BigInteger;
+
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
 import com.blisek.compiler_jftt.context.Context;
-import com.blisek.compiler_jftt.context.Register;
 import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.structs.RegisterReservationInfo;
 
 public class ModuloExpression extends VelocityExpression {
 	private static final String REG1_VAR = "reg1", REG2_VAR = "reg2", REG3_VAR = "reg3";
 	private final static Template moduloTemplate;
-	private int resultRegId;
 	
 	static {
 		moduloTemplate = VelocityExpression
@@ -30,32 +30,30 @@ public class ModuloExpression extends VelocityExpression {
 	public void setUpContext(Context ctx, VelocityContext vCtx, RegisterReservationInfo[] registers,
 			MemoryAllocationInfo[] allocations) {
 		
-		final Register ownRegister = registers[0].getRegister();
-		final int ownRegisterOldLevel = ownRegister.getUsedByLevel();
-		ownRegister.setUsedByLevel(Integer.MAX_VALUE);
+		final RegisterReservationInfo reg1 = registers[0],
+				reg2 = registers[1],
+				reg3 = registers[2];
+		final Expression expr1 = expressions[0];
+		final Expression expr2 = expressions[1];
 		
-		Expression expr1 = expressions[0];
-		Expression expr2 = expressions[1];
+		ctx.increaseLevel();
+		expr1.write(ctx, reg1);
+		expr2.write(ctx, reg2);
+		ctx.decreaseLevel();
 		
-		expr1.write(ctx.getWriter(), ctx);
-		expr2.write(ctx.getWriter(), ctx);
+		vCtx.put(REG1_VAR, reg1.getRegister().getId());
+		vCtx.put(REG2_VAR, reg2.getRegister().getId());
+		vCtx.put(REG3_VAR, reg3.getRegister().getId());
+
+		setResultRegisterId(reg1.getRegister().getId());
+		setOperationResultAvailable(false);
 		
-		ownRegister.setUsedByLevel(ownRegisterOldLevel);
-		
-		int reg1 = expr1.getResultRegisterId();
-		int reg2 = expr2.getResultRegisterId();
-		
-		vCtx.put(REG1_VAR, reg1);
-		vCtx.put(REG2_VAR, reg2);
-		vCtx.put(REG3_VAR, ownRegister.getId());
-		resultRegId = reg1;
-		
-		OperationsHelper.setRegisterValue(ctx, ctx.getHelperRegister(), allocations[0].getStartCell());
+		OperationsHelper.setRegisterValue(ctx, ctx.getHelperRegister(), allocations[0].getCellAddress(BigInteger.ZERO));
 	}
 
 	@Override
 	public void finishUp(Context ctx) {
-		setResultRegisterId(resultRegId);
+		setOperationResultAvailable(true);
 	}
 
 	@Override
@@ -65,7 +63,8 @@ public class ModuloExpression extends VelocityExpression {
 
 	@Override
 	public int getUsedRegistersCount() {
-		return 1; // +2 z załadowanych w rejestrach wartości
+		//return 1; // +2 z załadowanych w rejestrach wartości
+		return 3;
 	}
 
 	@Override

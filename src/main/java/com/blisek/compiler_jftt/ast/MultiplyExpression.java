@@ -1,5 +1,7 @@
 package com.blisek.compiler_jftt.ast;
 
+import java.math.BigInteger;
+
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
@@ -10,7 +12,6 @@ import com.blisek.compiler_jftt.structs.RegisterReservationInfo;
 public class MultiplyExpression extends VelocityExpression {
 	private static final String REGISTER1_VAR = "reg1", REGISTER2_VAR = "reg2"; 
 	private final static Template multiplyTemplate;
-	private int resRegId;
 	
 	static {
 		multiplyTemplate = VelocityExpression
@@ -27,30 +28,33 @@ public class MultiplyExpression extends VelocityExpression {
 
 	@Override
 	public void finishUp(Context ctx) {
-		setResultRegisterId(resRegId);
+		setOperationResultAvailable(true);
 	}
 
 	@Override
 	public void setUpContext(Context ctx, VelocityContext vCtx, RegisterReservationInfo[] registers,
 			MemoryAllocationInfo[] allocations) {
 		
-		Expression expr1 = expressions[0];
-		Expression expr2 = expressions[1];
+		final Expression expr1 = expressions[0];
+		final Expression expr2 = expressions[1];
+		final RegisterReservationInfo reg1 = registers[0];
+		final RegisterReservationInfo reg2 = registers[1];
 		
 		ctx.increaseLevel();
-		expr1.write(ctx.getWriter(), ctx);
-		expr2.write(ctx.getWriter(), ctx);
+		expr1.write(ctx, reg1);
+		expr2.write(ctx, reg2);
 		ctx.decreaseLevel();
 		
-		int reg1 = expr1.getResultRegisterId();
-		int reg2 = expr2.getResultRegisterId();
+		vCtx.put(REGISTER1_VAR, reg1.getRegister().getId());
+		vCtx.put(REGISTER2_VAR, reg2.getRegister().getId());
+		setResultRegisterId(reg1.getRegister().getId());
+		setOperationResultAvailable(false);
 		
-		vCtx.put(REGISTER1_VAR, reg1);
-		vCtx.put(REGISTER2_VAR, reg2);
-		resRegId = reg1;
-		
-		OperationsHelper.setRegisterValue(ctx, ctx.getHelperRegister(), allocations[0].getStartCell());
+		OperationsHelper.setRegisterValue(ctx, ctx.getHelperRegister(), 
+				allocations[0].getCellAddress(BigInteger.ZERO));
 	}
+	
+	
 
 	@Override
 	public int getUsedMemoryBlockSize() {
@@ -59,7 +63,7 @@ public class MultiplyExpression extends VelocityExpression {
 
 	@Override
 	public int getUsedRegistersCount() {
-		return 0;
+		return 2;
 	}
 
 	@Override

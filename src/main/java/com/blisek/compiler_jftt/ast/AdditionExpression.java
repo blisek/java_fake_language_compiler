@@ -6,6 +6,7 @@ import com.blisek.compiler_jftt.context.Context;
 import com.blisek.compiler_jftt.context.Register;
 import com.blisek.compiler_jftt.structs.Deallocator;
 import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
+import com.blisek.compiler_jftt.structs.RegisterReservationInfo;
 import com.blisek.compiler_jftt.writer.Instructions;
 import com.blisek.compiler_jftt.writer.Writer;
 
@@ -20,28 +21,38 @@ public class AdditionExpression extends BiExpression {
 	}
 
 	@Override
-	public int write(Writer writer_, Context ctx) {
+	public int write(Context ctx, Object additionalData) {
 		final Writer writer = ctx.getWriter();
 		final int startLine = writer.getNextLineNumber();
-		
-		Expression secondExp = getSecondExpression();
-		secondExp.write(writer, ctx);
-		final int secondRegisterId = secondExp.getResultRegisterId();
-		
-		MemoryAllocationInfo[] allocatedMem = ctx.getMemoryAllocationStrategy().allocateTemporaryMemory();
-		try(Deallocator deallocator = Deallocator.of(allocatedMem)) {
-			MemoryAllocationInfo temporaryAlloc = allocatedMem[0];
-			OperationsHelper.storeRegisterValue(ctx, ctx.getRegisterById(secondRegisterId), allocatedMem[0], BigInteger.ZERO);
-			Expression firstExp = getFirstExpression();
-			firstExp.write(writer, ctx);
-			OperationsHelper.setRegisterValue(ctx, ctx.getHelperRegister(), temporaryAlloc.getCellAddress(0));
-			final Register resultRegister = ctx.getRegisterById(firstExp.getResultRegisterId());
-			writer.write(OperationsHelper.genInstruction(Instructions.ADD_i, resultRegister));
-			setResultRegisterId(resultRegister.getId());
+
+		final RegisterReservationInfo[] registers = OperationsHelper.getRegisters(ctx, 2);
+		final Expression secondExp = getSecondExpression();
+
+		ctx.increaseLevel();
+		secondExp.write(ctx, registers[0]);
+		ctx.decreaseLevel();
+
+		final MemoryAllocationInfo[] allocatedMem = ctx.getMemoryAllocationStrategy().allocateTemporaryMemory();
+		try (Deallocator _registersDeallocator = Deallocator.of(registers[0])) {
+			try (Deallocator _memoryDeallocator = Deallocator.of(allocatedMem)) {
+				final MemoryAllocationInfo temporaryAlloc = allocatedMem[0];
+				OperationsHelper.storeRegisterValue(ctx, registers[0].getRegister(), allocatedMem[0],
+						BigInteger.ZERO);
+				final Expression firstExp = getFirstExpression();
+				final Register resultRegister = registers[1].getRegister();
+				
+				ctx.increaseLevel();
+				firstExp.write(ctx, registers[1]);
+				ctx.decreaseLevel();
+				
+				OperationsHelper.setRegisterValue(ctx, ctx.getHelperRegister(),
+						temporaryAlloc.getCellAddress(BigInteger.ZERO));
+				writer.write(OperationsHelper.genInstruction(Instructions.ADD_i, resultRegister));
+				setResultRegisterId(resultRegister.getId());
+			}
 		}
-		
+
 		return writer.getNextLineNumber() - startLine;
 	}
 
-	
 }

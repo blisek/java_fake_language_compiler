@@ -53,8 +53,9 @@ public class OperationsHelper {
 			RegisterReservationInfo rri = rms.reserveRegister(ctx, excludedRegisters);
 			final Register tmpRegister = rri.getRegister();
 			excludedRegisters.add(tmpRegister.getId());
-			if(tmpRegister.isTaken())
-				rri.store(mas.allocateTemporaryMemory()[0]);
+			// ustawiane juz przez reserveRegister
+//			if(tmpRegister.isTaken())
+//				rri.store(mas.allocateTemporaryMemory()[0]);
 			regResInfo[i] = rri;
 		}
 		
@@ -77,18 +78,9 @@ public class OperationsHelper {
 		Objects.requireNonNull(register, "register can't be null");
 		Objects.requireNonNull(destinationCell, "destinationCell can't be null");
 		
-		
-		Writer writer = ctx.getWriter();
-//		int cell = destinationCell.getStartCell() + offset;
-		BigInteger cell = BigInteger.ZERO.equals(offset) ? destinationCell.getStartCell() : 
-			destinationCell.getStartCell().add(offset);
-		Register helpRegister = ctx.getHelperRegister();
-		if(register.getId() == helpRegister.getId() && helpRegister.getValueType() == ValueType.NUMERIC) {
-			if(!((BigInteger)helpRegister.getValue()).equals(cell)) {				
-				if(register.isHelpRegister())
-					throw new IllegalStateException("Used for store register is help register. Operation is unallowed");
-			}
-		}
+		final Writer writer = ctx.getWriter();
+		final BigInteger cell = destinationCell.getCellAddress(offset);
+		final Register helpRegister = ctx.getHelperRegister();
 		
 		setRegisterValue(ctx, helpRegister, cell);
 		writer.write(genInstruction(Instructions.STORE_i, register));

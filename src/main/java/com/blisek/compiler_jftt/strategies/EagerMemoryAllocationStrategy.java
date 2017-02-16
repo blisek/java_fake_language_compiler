@@ -1,46 +1,23 @@
 package com.blisek.compiler_jftt.strategies;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.structs.VariableInfo;
 
-public class SimpleMemoryAllocationStrategy /*implements MemoryAllocationStrategy*/ {/*
+public class EagerMemoryAllocationStrategy implements MemoryAllocationStrategy {
 	private final MemoryAllocationInfo[] temporaryMemory;
 	private final ArrayList<MemoryAllocationInfo> normalMemory;
 	private int temporaryMemoryIndex;
-	private int nextCell;
+	private BigInteger nextCell;
 
-	public SimpleMemoryAllocationStrategy(int tempMemSize) {
+	public EagerMemoryAllocationStrategy(int tempMemSize) {
 		this.temporaryMemory = new MemoryAllocationInfo[tempMemSize];
 		this.normalMemory = new ArrayList<>(64);
 		temporaryMemoryIndex = 0;
-		initTemporaryMemory();
-	}
-
-	private void initTemporaryMemory() {
-		for(int i = 0; i < temporaryMemory.length; ++i)
-			temporaryMemory[i] = new MemoryAllocationInfo(nextCell++, 1);
-	}
-
-	@Override
-	public MemoryAllocationInfo[] allocateNormalMemory(int size) {
-		MemoryAllocationInfo mai = new MemoryAllocationInfo(nextCell, size);
-		if(size > 1) {
-			normalMemory.ensureCapacity(normalMemory.size() + size + 1);
-			for(int i = 0; i < size; ++i)
-				normalMemory.add(mai);
-		}
-		else {
-			normalMemory.add(mai);
-		}
-		nextCell += size;
-		return new MemoryAllocationInfo[] { mai };
-	}
-
-	@Override
-	public MemoryAllocationInfo[] allocateNearMemory(int size) {
-		return allocateNormalMemory(size);
+		final int normalMemoryStartCell = initTemporaryMemory(0);
+		nextCell = BigInteger.valueOf(normalMemoryStartCell);
 	}
 
 	@Override
@@ -84,6 +61,19 @@ public class SimpleMemoryAllocationStrategy /*implements MemoryAllocationStrateg
 		return memAllocInfo;
 	}
 
+	@Override
+	public MemoryAllocationInfo[] allocateNormalMemory(BigInteger size) {
+		MemoryAllocationInfo mai = new MemoryAllocationInfo(nextCell, size);
+		nextCell = nextCell.add(BigInteger.ONE);
+		normalMemory.add(mai);
+		return new MemoryAllocationInfo[] { mai };
+	}
+	
+	@Override
+	public MemoryAllocationInfo[] allocateNearMemory(BigInteger size) {
+		return allocateNormalMemory(size);
+	}
+	
 	private int findContinuousMemoryBlock(MemoryAllocationInfo[] arr, int startIndex, int index, int countdown) {
 		if(countdown <= 0)
 			return startIndex;
@@ -107,5 +97,12 @@ public class SimpleMemoryAllocationStrategy /*implements MemoryAllocationStrateg
 		
 		return -1;
 	}
-*/
+
+	private int initTemporaryMemory(int startCell) {
+		int nextCell = startCell;
+		for(int i = 0; i < temporaryMemory.length; ++i)
+			temporaryMemory[i] = new MemoryAllocationInfo(nextCell++, 1);
+		return nextCell;
+	}
+
 }

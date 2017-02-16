@@ -56,8 +56,8 @@ addition
 					= value.v PLUS ZERO			{: return v; :}
 					| ZERO PLUS value.v			{: return v; :}
 					| value.v1 PLUS value.v2	{: return new AdditionExpression(v1, v2); :}
-					| value.v1 PLUS ONE.v2		{: return new AdditionExpression(v1, new NumberValueExpression((BigInteger)v2.value)); :}
-					| ONE.v1 PLUS value.v2		{: return new AdditionExpression(new NumberValueExpression((BigInteger)v1.value), v2); :}
+					| value.v1 PLUS ONE			{: return new AdditionExpression(v1, new NumberValueExpression(BigInteger.ONE)); :}
+					| ONE PLUS value.v2			{: return new AdditionExpression(new NumberValueExpression(BigInteger.ONE), v2); :}
 					;
 
 subtraction

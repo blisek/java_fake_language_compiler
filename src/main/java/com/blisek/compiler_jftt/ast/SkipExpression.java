@@ -1,7 +1,6 @@
 package com.blisek.compiler_jftt.ast;
 
 import com.blisek.compiler_jftt.context.Context;
-import com.blisek.compiler_jftt.writer.Writer;
 
 public class SkipExpression extends Expression {
 
@@ -14,7 +13,7 @@ public class SkipExpression extends Expression {
 	}
 
 	@Override
-	public int write(Writer writer_, Context ctx) {
+	public int write(Context ctx, Object additionalData) {
 		return 0;
 	}
 

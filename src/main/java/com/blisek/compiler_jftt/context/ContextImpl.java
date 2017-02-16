@@ -1,6 +1,5 @@
 package com.blisek.compiler_jftt.context;
 
-import java.time.temporal.ValueRange;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,10 +9,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-import com.blisek.compiler_jftt.ast.OperationsHelper;
+import com.blisek.compiler_jftt.strategies.EagerMemoryAllocationStrategy;
 import com.blisek.compiler_jftt.strategies.MemoryAllocationStrategy;
 import com.blisek.compiler_jftt.strategies.RegistryManagementStrategy;
-import com.blisek.compiler_jftt.strategies.SimpleMemoryAllocationStrategy;
 import com.blisek.compiler_jftt.strategies.UnusedAndWithHighestLevelRegistriesFirstStrategy;
 import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.writer.Writer;
@@ -40,7 +38,7 @@ public class ContextImpl implements Context {
 		valueRestoreListener = new ArrayList<>(12);
 		writer = new WriterImpl(this);
 		registryManagementStrategy = new UnusedAndWithHighestLevelRegistriesFirstStrategy();
-		memoryAllocationStrategy = new SimpleMemoryAllocationStrategy(TEMPORARY_MEMORY_CELL_COUNT);
+		memoryAllocationStrategy = new EagerMemoryAllocationStrategy(TEMPORARY_MEMORY_CELL_COUNT);
 	}
 
 	@Override
@@ -52,41 +50,6 @@ public class ContextImpl implements Context {
 	@Override
 	public Optional<Integer> getLineForLabel(int label) {
 		return Optional.ofNullable(labelsAssociations.get(label));
-	}
-
-//	@Override
-//	public Register reserveRegister(Writer writer, boolean restoreOnLevelChange) {
-//		final Register register = chooseRegisterForTake();
-//		final int currentLevel = getLevel();
-//		final int storedCellId = OperationsHelper.storeRegister(this, null, register);
-//		if(restoreOnLevelChange) {
-//			valueRestoreListener.add((from, to, ctx) -> {
-//				if(from == currentLevel && to < from) {
-//					OperationsHelper.loadRegister(this, register, storedCellId);
-//					return true;
-//				}
-//				return false;
-//			});
-//		}
-//		register.setUsedByLevel(currentLevel);
-//		return register;
-//	}
-
-	private Register chooseRegisterForTake() {
-		Optional<Register> freeRegister = Arrays.stream(registers).filter(r -> !r.isTaken()).findFirst();
-		if(freeRegister.isPresent())
-			return freeRegister.get();
-		
-		// select most non-local register
-		Optional<Register> takenRegisterWithLowestLevel = Arrays.stream(registers)
-				.filter(r -> !r.isHelpRegister())
-				.min((r1, r2) -> Integer.compare(r1.getUsedByLevel(), r2.getUsedByLevel()));
-		
-		if(takenRegisterWithLowestLevel.isPresent())
-			return takenRegisterWithLowestLevel.get();
-		
-		// if still not found
-		return registers[registers.length-1];
 	}
 
 	@Override
@@ -118,15 +81,6 @@ public class ContextImpl implements Context {
 		nextFreeMemoryCell += size;
 		return new MemoryAllocationInfo(tmp, size);
 	}
-
-//	@Override
-//	public Register getCounterRegister() {
-//		Optional<Register> reg = Arrays.stream(registers).filter(Register::isCounter).findFirst();
-//		if(reg.isPresent())
-//			return reg.get();
-//		
-//		
-//	}
 	
 	@Override
 	public Register getHelperRegister() {

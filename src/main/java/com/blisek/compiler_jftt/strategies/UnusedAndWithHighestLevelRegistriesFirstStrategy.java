@@ -67,9 +67,9 @@ public class UnusedAndWithHighestLevelRegistriesFirstStrategy implements Registr
 		if(anyNotHelperRegister.isPresent())
 			return anyNotHelperRegister.get();
 		
-		Register helpRegister = ctx.getHelperRegister();
-		if(excludeRegisters.test(helpRegister))
-			return helpRegister;
+//		Register helpRegister = ctx.getHelperRegister();
+//		if(excludeRegisters.test(helpRegister))
+//			return helpRegister;
 		
 		throw new IllegalStateException("No register is available.");
 	}

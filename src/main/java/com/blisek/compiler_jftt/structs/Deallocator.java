@@ -24,4 +24,10 @@ public class Deallocator implements AutoCloseable {
 		}
 		return new Deallocator(Arrays.stream(arr).toArray(size -> new AutoCloseable[size]));
 	}
+	
+	public static <T extends AutoCloseable> Deallocator of(T obj) {
+		if(obj == null)
+			return new Deallocator();
+		return new Deallocator(obj);
+	}
 }

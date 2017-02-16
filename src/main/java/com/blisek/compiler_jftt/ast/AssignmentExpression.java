@@ -18,7 +18,7 @@ public class AssignmentExpression extends BiExpression {
 	}
 
 	@Override
-	public int write(Writer writer_, Context ctx) {
+	public int write(Context ctx, Object additionalData) {
 		final Writer writer = ctx.getWriter();
 		final int startLineNum = writer.getNextLineNumber();
 		
@@ -27,12 +27,13 @@ public class AssignmentExpression extends BiExpression {
 		final VariableInfo variable = variableExpression.getVariable();
 		assignMemoryCellIfNotAssigned(ctx, variable);
 		
-		initializationExpr.write(writer, ctx);
+		initializationExpr.write(ctx, null);
 		final int resultRegister = initializationExpr.getResultRegisterId();
 		OperationsHelper.storeRegisterValue(ctx, ctx.getRegisterById(resultRegister), 
 				variable.getAssignedMemoryCells()[0], BigInteger.ZERO);
 		variable.setValueAssigned(true);
-		setResultRegisterId(resultRegister);
+		setResultRegisterId(-1);
+		ctx.getRegisterById(resultRegister).setTaken(false);
 		
 		return writer.getNextLineNumber() - startLineNum;
 	}

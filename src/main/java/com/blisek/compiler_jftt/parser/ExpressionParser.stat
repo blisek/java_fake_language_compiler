@@ -47,7 +47,7 @@
 	value: SHIFT; goto 13
 12:	SEMIC: REDUCE addition = value.v PLUS ZERO
 13:	SEMIC: REDUCE addition = value.v1 PLUS value.v2
-14:	SEMIC: REDUCE addition = value.v1 PLUS ONE.v2
+14:	SEMIC: REDUCE addition = value.v1 PLUS ONE
 15:	[any]: REDUCE value = NUMBER.n
 16:	[any]: REDUCE value = identifier
 17:	[any]: REDUCE identifier = PIDENTIFIER.p
@@ -127,7 +127,7 @@
 	NUMBER: SHIFT; goto 15
 	identifier: SHIFT; goto 16
 	value: SHIFT; goto 51
-51:	SEMIC: REDUCE addition = ONE.v1 PLUS value.v2
+51:	SEMIC: REDUCE addition = ONE PLUS value.v2
 52:	PIDENTIFIER: SHIFT; goto 17
 	NUMBER: SHIFT; goto 15
 	identifier: SHIFT; goto 16
