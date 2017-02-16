@@ -2,10 +2,7 @@ package com.blisek.compiler_jftt;
 
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
@@ -15,11 +12,11 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import com.blisek.compiler_jftt.ast.MultiplyExpression;
+import com.blisek.compiler_jftt.exceptions.CompilationException;
 import com.blisek.compiler_jftt.scanner.Parser;
 
 public class Compiler {
 	private static final Options cliOptions;
-	private static String inputFileStr, outputFileStr;
 	private static File inputFile, outputFile;
 	
 
@@ -36,9 +33,10 @@ public class Compiler {
 		try {
 			Parser.parse(inputFile, outputFile);
 		}
-		catch(beaver.Parser.Exception e) {
-			System.err.println("Compile error: ");
-			e.printStackTrace();
+		catch(beaver.Parser.Exception | CompilationException e) {
+			System.err.print("Compile error: ");
+			System.err.println(e.getMessage());
+//			e.printStackTrace();
 		}
 		catch(IOException ioe) {
 			System.err.println("IO error while reading/writing file: ");
@@ -71,7 +69,6 @@ public class Compiler {
 			return false;
 		}
 		
-		outputFileStr = outputFileName;
 		outputFile = new File(outputFileName);
 		return true;
 	}
@@ -86,7 +83,6 @@ public class Compiler {
 		if(!inputF.exists())
 			return false;
 		
-		inputFileStr = inputFileName;
 		inputFile = inputF;
 		return true;
 	}

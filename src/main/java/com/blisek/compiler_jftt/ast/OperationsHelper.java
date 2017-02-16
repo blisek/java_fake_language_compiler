@@ -11,7 +11,6 @@ import com.blisek.compiler_jftt.strategies.MemoryAllocationStrategy;
 import com.blisek.compiler_jftt.strategies.RegistryManagementStrategy;
 import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.structs.RegisterReservationInfo;
-import com.blisek.compiler_jftt.structs.ValueType;
 import com.blisek.compiler_jftt.writer.Instructions;
 import com.blisek.compiler_jftt.writer.Writer;
 
@@ -50,16 +49,25 @@ public class OperationsHelper {
 		final List<Integer> excludedRegisters = new ArrayList<>(5);
 		
 		for(int i = 0; i < count; ++i) {
-			RegisterReservationInfo rri = rms.reserveRegister(ctx, excludedRegisters);
+			RegisterReservationInfo rri = rms.reserveRegister(ctx, excludedRegisters, false);
 			final Register tmpRegister = rri.getRegister();
 			excludedRegisters.add(tmpRegister.getId());
-			// ustawiane juz przez reserveRegister
-//			if(tmpRegister.isTaken())
-//				rri.store(mas.allocateTemporaryMemory()[0]);
+			if(tmpRegister.isTaken())
+				rri.store(mas.allocateTemporaryMemory()[0]);
 			regResInfo[i] = rri;
 		}
 		
 		return regResInfo;
+	}
+	
+	public static void freeRegister(Register reg) {
+		reg.setTaken(false);
+		reg.setUsedByLevel(-1);
+	}
+	
+	public static void freeRegister(Context ctx, int regId) {
+		final Register reg = ctx.getRegisterById(regId);
+		freeRegister(reg);
 	}
 
 	public static MemoryAllocationInfo storeRegister(Context ctx, Writer _writer, Register register) {

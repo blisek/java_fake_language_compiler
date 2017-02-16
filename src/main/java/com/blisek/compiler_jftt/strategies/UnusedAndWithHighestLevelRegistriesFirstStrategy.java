@@ -8,19 +8,24 @@ import java.util.function.Predicate;
 
 import com.blisek.compiler_jftt.context.Context;
 import com.blisek.compiler_jftt.context.Register;
-import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.structs.RegisterReservationInfo;
-import com.blisek.compiler_jftt.structs.ValueType;
 
 public class UnusedAndWithHighestLevelRegistriesFirstStrategy implements RegistryManagementStrategy {
 
 	@Override
 	public RegisterReservationInfo reserveRegister(Context ctx, Collection<Integer> excludeRegisters) {
+		return reserveRegister(ctx, excludeRegisters, true);
+	}
+
+	@Override
+	public RegisterReservationInfo reserveRegister(Context ctx, Collection<Integer> excludeRegisters, boolean setTaken) {
 		Register reservedRegister = chooseRegister(ctx, excludeRegisters);
-		reservedRegister.setTaken(true);
+		if(setTaken)
+			reservedRegister.setTaken(true);
 		reservedRegister.setUsedByLevel(ctx.getLevel());
 		return new RegisterReservationInfo(ctx, reservedRegister);
 	}
+	
 	
 	private Register chooseRegister(Context ctx, final Collection<Integer> excludeReg) {
 		final int currentLevel = ctx.getLevel();

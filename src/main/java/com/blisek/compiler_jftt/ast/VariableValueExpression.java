@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import com.blisek.compiler_jftt.context.Context;
 import com.blisek.compiler_jftt.context.Register;
+import com.blisek.compiler_jftt.exceptions.UsedUninitialisedVariableCompilationException;
 import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.structs.VariableInfo;
 
@@ -37,6 +38,15 @@ public class VariableValueExpression extends ValueExpression {
 		BigInteger val = variable.getValue();
 		MemoryAllocationInfo[] mai = variable.getAssignedMemoryCells();
 		// TODO: sprawdzanie czy zmienna została zainicjalizowana
+		if(mai == null) {
+			if(!variable.isValueAssigned()) {
+				String msg = "[%s-%s] Use of uninitialised variable \"%s\"!";
+				String startPos = String.format("%d,%d", getLine(start), getColumn(start));
+				String endPos = String.format("%d,%d", getLine(end), getColumn(end));
+				throw new UsedUninitialisedVariableCompilationException(String.format(msg, startPos, endPos, variable.getVariableName()));
+			}
+		}
+		
 		BigInteger cellAddress = mai[0].getCellAddress(BigInteger.ZERO);
 		if(val == null) {
 			OperationsHelper.loadRegister(ctx, destinationRegister, cellAddress);

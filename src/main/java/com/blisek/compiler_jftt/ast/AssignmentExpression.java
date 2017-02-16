@@ -3,7 +3,6 @@ package com.blisek.compiler_jftt.ast;
 import java.math.BigInteger;
 
 import com.blisek.compiler_jftt.context.Context;
-import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.structs.VariableInfo;
 import com.blisek.compiler_jftt.writer.Writer;
 
@@ -27,13 +26,16 @@ public class AssignmentExpression extends BiExpression {
 		final VariableInfo variable = variableExpression.getVariable();
 		assignMemoryCellIfNotAssigned(ctx, variable);
 		
+		ctx.increaseLevel();
 		initializationExpr.write(ctx, null);
+		ctx.decreaseLevel();
+		
 		final int resultRegister = initializationExpr.getResultRegisterId();
 		OperationsHelper.storeRegisterValue(ctx, ctx.getRegisterById(resultRegister), 
 				variable.getAssignedMemoryCells()[0], BigInteger.ZERO);
 		variable.setValueAssigned(true);
 		setResultRegisterId(-1);
-		ctx.getRegisterById(resultRegister).setTaken(false);
+		OperationsHelper.freeRegister(ctx, resultRegister);
 		
 		return writer.getNextLineNumber() - startLineNum;
 	}

@@ -9,4 +9,5 @@ public interface RegistryManagementStrategy extends Strategy {
 
 	RegisterReservationInfo reserveRegister(Context ctx, Collection<Integer> excludeRegisters);
 	
+	RegisterReservationInfo reserveRegister(Context ctx, Collection<Integer> excludeRegisters, boolean setTaken);
 }
