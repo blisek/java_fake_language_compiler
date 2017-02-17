@@ -37,18 +37,19 @@ public class ExpressionParser extends Parser {
 	}
 
 	static final ParsingTables PARSING_TABLES = new ParsingTables(
-		"U9orrDbF4r4K1l2lKmeMB2gsfRGK4LmGGS22gAY8gAXrUU211n9vqCGO7umlxblSzttVufl" +
-		"$Z$k#xwAuxthyvlRKD6EDcEYT$EQxT#umS#UK6G1da8UUwCjzBsHZ2Cen51Meb7UOW4cOWZ" +
-		"ZdV2X050FPwuDX68N#EjS36SX29gfGWnZgpNmkUgFEzC8eD5c4VYPBK6fo40PZDCPW7CRp2" +
-		"XQcoLbua8y0rn2XOXf0PURiF5Hh3jUirHoXELApGNEiPgDca#Pak4NWHOvqoNFfX1$DybGU" +
-		"oqC44P87Sa$ko6svAJVakboJo$9MtiXhUIKlvOKyaVjoIwxACtaaT#KAm6jEH0kcmcupa6Z" +
-		"JCPDN3V2Px7q1An1X3QAiW8irzh4s5hSiFhMNjRRWPlqyh7jYpizL1hdEN#UJlTzbyY$yh7" +
-		"sGrGwP6NiDgPB7$bNccoguTClXiKGlavlhRpR#AbQonxvRJECLCtc7MMiJjQtIz6cjSscn7" +
-		"fjhLW8iqN4sbT9IMaRBxUCwjuYQQ8MELsgMqIfQJMkeWjRHUjf0rRIHDj5cggKjj9MsqNRQ" +
-		"GJjf5#scCCLfZ$qSj9TQQH#rqNvgfmCKemuwI7Fe4CsZmxI0Zj1HEgxhNKWdj7yovVcEqIa" +
-		"wdNAiX6PhlvoyoJaRIztf67UbZl#4hSOnZZd6TOvnVJUlsw3PgDcisQ8PJpat#N$IgjccsQ" +
-		"uvF#NSZcxUt$xD85#XJRveViBF9fVaebmmlVDq3l#boKUp$q3lvRDyDwDlt5NoRRU$dHPvp" +
-		"1jfl$iXlaj1VXc2V5CJB7wDN6c5EUyKIQCmZQX3KHe1tiFcDpACuX##xCo3");
+		"U9ojrDblJ64O1l1dbdRQZaxLR6rdEgrTKHH5KHH5KLhqGaH2Wv188o8YaKWlnOMT6$k#xpi" +
+		"N$WDxxVk#bAfzVptppJVDE9d4a9wJttdEUxulPzwpp05m5itG14vkKv24N7H2PtH1ddp4C8" +
+		"p0ABagvv2CJ3H73hgX9mfGYDPgVXRwC5FH5VrPjGhDHm8ii25UZJZG53wuuKMwgWF8Lja2B" +
+		"LMsGLkLxT51PJvw$3K7O206OqZCynDGZZAO4SSUsr57wawzgBS8hCo#r8#AQ10Lqr0QYKJO" +
+		"fKvUIorSAC4OG5x2WpHam2$FvQayaKVoGExBNRaZj#MMN9SFybxUIRsybJUyTpNoGXxBFRa" +
+		"fh#IPF9GR03iRZbACvjuuZELvtUmkk4tdMNtmyru7OE8pIURzC$4kstWDYNmsuKpHyuDfOV" +
+		"zngWhDT$5UUzXvUAInCzn3hFDTtFFmBKXJFHg1poZQyJ0dhp#qsbdR#RHCVBD2g#b$Lfx1t" +
+		"B0Npnw1YcgefL9dLIZOCR107vjFVbgiwoJAeIMqb9O5Z#knXPHBotMzGkTAdQjqvj5gMaDh" +
+		"AP$MqNhQG0MqaJRHPYgaBRILjj5ssa4xQHVj9WSLqHxQI$kecFPJ2HsWKZf8vNI8ocWy7QQ" +
+		"9T8Gcqr6QIiVeE9tKVS#WKth$TCHrBw8pT29yJ4Jg6QbwV08vmsDwlDPGrqNM$ugBpL0x3F" +
+		"KaGrqPutcd6EffEgVhdAcpAcBEB9spTSxHELTdTSJSUJ7sKH7So0$eHRxh$8g6HQx95Rciz" +
+		"YxHHRf0vz48YzH4FVf5RJ$J9$aclrJr4y4tF8jV02$$SLwLmV#KcKpy8bZ9efdvvJD5bS5n" +
+		"8ryK$YWo3G9HkFaRaLoAzG$Plm4Lt#Xk");
 
 	private final Action[] actions;
 
@@ -309,15 +310,25 @@ public class ExpressionParser extends Parser {
 					 return new NumberValueExpression(n);
 				}
 			},
-			Action.RETURN,	// [41] value = identifier
-			new Action() {	// [42] identifier = PIDENTIFIER.p
+			new Action() {	// [41] value = ZERO
+				public Symbol reduce(Symbol[] _symbols, int offset) {
+					 return new NumberValueExpression(BigInteger.ZERO);
+				}
+			},
+			new Action() {	// [42] value = ONE
+				public Symbol reduce(Symbol[] _symbols, int offset) {
+					 return new NumberValueExpression(BigInteger.ONE);
+				}
+			},
+			Action.RETURN,	// [43] value = identifier
+			new Action() {	// [44] identifier = PIDENTIFIER.p
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_p = _symbols[offset + 1];
 					final String p = (String) _symbol_p.value;
 					 return new VariableValueExpression(VariableInfo.of(p));
 				}
 			},
-			new Action() {	// [43] identifier = PIDENTIFIER.p LBRACKET NUMBER.n RBRACKET
+			new Action() {	// [45] identifier = PIDENTIFIER.p LBRACKET NUMBER.n RBRACKET
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_p = _symbols[offset + 1];
 					final String p = (String) _symbol_p.value;
@@ -326,7 +337,21 @@ public class ExpressionParser extends Parser {
 					 return new ArrayValueExpression(VariableInfo.of(p), n);
 				}
 			},
-			new Action() {	// [44] identifier = PIDENTIFIER.p1 LBRACKET PIDENTIFIER.p2 RBRACKET
+			new Action() {	// [46] identifier = PIDENTIFIER.p LBRACKET ZERO RBRACKET
+				public Symbol reduce(Symbol[] _symbols, int offset) {
+					final Symbol _symbol_p = _symbols[offset + 1];
+					final String p = (String) _symbol_p.value;
+					 return new ArrayValueExpression(VariableInfo.of(p), BigInteger.ZERO);
+				}
+			},
+			new Action() {	// [47] identifier = PIDENTIFIER.p LBRACKET ONE RBRACKET
+				public Symbol reduce(Symbol[] _symbols, int offset) {
+					final Symbol _symbol_p = _symbols[offset + 1];
+					final String p = (String) _symbol_p.value;
+					 return new ArrayValueExpression(VariableInfo.of(p), BigInteger.ONE);
+				}
+			},
+			new Action() {	// [48] identifier = PIDENTIFIER.p1 LBRACKET PIDENTIFIER.p2 RBRACKET
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_p1 = _symbols[offset + 1];
 					final String p1 = (String) _symbol_p1.value;

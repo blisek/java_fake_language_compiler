@@ -6,6 +6,7 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
 import com.blisek.compiler_jftt.context.Context;
+import com.blisek.compiler_jftt.helpers.OperationsHelper;
 import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.structs.RegisterReservationInfo;
 

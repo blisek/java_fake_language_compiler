@@ -10,6 +10,7 @@ import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
 import com.blisek.compiler_jftt.context.Context;
+import com.blisek.compiler_jftt.helpers.OperationsHelper;
 import com.blisek.compiler_jftt.structs.Deallocator;
 import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.structs.RegisterReservationInfo;

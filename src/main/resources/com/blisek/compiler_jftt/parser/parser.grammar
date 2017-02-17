@@ -104,12 +104,16 @@ modulo
 
 value       
 					= NUMBER.n					{: return new NumberValueExpression(n); :}
+					| ZERO						{: return new NumberValueExpression(BigInteger.ZERO); :}
+					| ONE						{: return new NumberValueExpression(BigInteger.ONE); :}
              		| identifier
              		;
 
 identifier  
 					= PIDENTIFIER.p 									{: return new VariableValueExpression(VariableInfo.of(p)); :}
 					| PIDENTIFIER.p LBRACKET NUMBER.n RBRACKET 			{: return new ArrayValueExpression(VariableInfo.of(p), n); :}
+					| PIDENTIFIER.p LBRACKET ZERO RBRACKET 				{: return new ArrayValueExpression(VariableInfo.of(p), BigInteger.ZERO); :}
+					| PIDENTIFIER.p LBRACKET ONE RBRACKET 				{: return new ArrayValueExpression(VariableInfo.of(p), BigInteger.ONE); :}
 					| PIDENTIFIER.p1 LBRACKET PIDENTIFIER.p2 RBRACKET 	{: return new ArrayVariableValueExpression(VariableInfo.of(p1), p2); :} 
              		;
 

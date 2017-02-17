@@ -1,6 +1,7 @@
 package com.blisek.compiler_jftt.ast;
 
 import com.blisek.compiler_jftt.context.Context;
+import com.blisek.compiler_jftt.helpers.OperationsHelper;
 import com.blisek.compiler_jftt.writer.Instructions;
 import com.blisek.compiler_jftt.writer.Writer;
 

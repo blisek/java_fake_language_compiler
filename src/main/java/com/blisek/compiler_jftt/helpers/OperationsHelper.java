@@ -1,4 +1,4 @@
-package com.blisek.compiler_jftt.ast;
+package com.blisek.compiler_jftt.helpers;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

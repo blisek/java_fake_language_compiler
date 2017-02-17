@@ -2,9 +2,9 @@ package com.blisek.compiler_jftt.structs;
 
 import java.math.BigInteger;
 
-import com.blisek.compiler_jftt.ast.OperationsHelper;
 import com.blisek.compiler_jftt.context.Context;
 import com.blisek.compiler_jftt.context.Register;
+import com.blisek.compiler_jftt.helpers.OperationsHelper;
 
 public final class RegisterReservationInfo implements AutoCloseable {
 	private final Context context;

@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import com.blisek.compiler_jftt.context.Context;
 import com.blisek.compiler_jftt.context.Register;
+import com.blisek.compiler_jftt.helpers.OperationsHelper;
 
 public class NumberValueExpression extends ValueExpression {
 	private BigInteger number;

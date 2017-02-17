@@ -4,19 +4,19 @@
 	program: ACCEPT
 2:	vdeclarations: SHIFT; goto 3
 	[any]: REDUCE vdeclarations = 
-3:	PIDENTIFIER: SHIFT; goto 75
+3:	PIDENTIFIER: SHIFT; goto 81
 	BEGIN: SHIFT; goto 4
 4:	PIDENTIFIER: SHIFT; goto 19
-	READ: SHIFT; goto 66
-	WRITE: SHIFT; goto 69
-	SKIP: SHIFT; goto 72
+	READ: SHIFT; goto 72
+	WRITE: SHIFT; goto 75
+	SKIP: SHIFT; goto 78
 	identifier: SHIFT; goto 8
-	command: SHIFT; goto 74
+	command: SHIFT; goto 80
 	commands: SHIFT; goto 5
 5:	PIDENTIFIER: SHIFT; goto 19
-	READ: SHIFT; goto 66
-	WRITE: SHIFT; goto 69
-	SKIP: SHIFT; goto 72
+	READ: SHIFT; goto 72
+	WRITE: SHIFT; goto 75
+	SKIP: SHIFT; goto 78
 	END: SHIFT; goto 6
 	identifier: SHIFT; goto 8
 	command: SHIFT; goto 7
@@ -25,24 +25,24 @@
 8:	ASSIGN: SHIFT; goto 9
 9:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
-	ZERO: SHIFT; goto 46
-	ONE: SHIFT; goto 57
+	ZERO: SHIFT; goto 50
+	ONE: SHIFT; goto 63
 	identifier: SHIFT; goto 18
 	value: SHIFT; goto 12
 	expression: SHIFT; goto 10
-	addition: SHIFT; goto 41
-	subtraction: SHIFT; goto 42
-	multiplication: SHIFT; goto 43
-	division: SHIFT; goto 44
-	modulo: SHIFT; goto 45
+	addition: SHIFT; goto 45
+	subtraction: SHIFT; goto 46
+	multiplication: SHIFT; goto 47
+	division: SHIFT; goto 48
+	modulo: SHIFT; goto 49
 10:	SEMIC: SHIFT; goto 11
 11:	[any]: REDUCE command = identifier.i ASSIGN expression.e SEMIC
 12:	SEMIC: REDUCE expression = value
 	PLUS: SHIFT; goto 13
-	MINUS: SHIFT; goto 25
-	MULT: SHIFT; goto 29
-	MOD: SHIFT; goto 37
-	DIV: SHIFT; goto 33
+	MINUS: SHIFT; goto 29
+	MULT: SHIFT; goto 33
+	MOD: SHIFT; goto 41
+	DIV: SHIFT; goto 37
 13:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
 	ZERO: SHIFT; goto 14
@@ -56,122 +56,152 @@
 18:	[any]: REDUCE value = identifier
 19:	LBRACKET: SHIFT; goto 20
 	[any]: REDUCE identifier = PIDENTIFIER.p
-20:	PIDENTIFIER: SHIFT; goto 23
+20:	PIDENTIFIER: SHIFT; goto 27
 	NUMBER: SHIFT; goto 21
+	ZERO: SHIFT; goto 23
+	ONE: SHIFT; goto 25
 21:	RBRACKET: SHIFT; goto 22
 22:	[any]: REDUCE identifier = PIDENTIFIER.p LBRACKET NUMBER.n RBRACKET
 23:	RBRACKET: SHIFT; goto 24
-24:	[any]: REDUCE identifier = PIDENTIFIER.p1 LBRACKET PIDENTIFIER.p2 RBRACKET
-25:	PIDENTIFIER: SHIFT; goto 19
-	NUMBER: SHIFT; goto 17
-	ZERO: SHIFT; goto 26
-	ONE: SHIFT; goto 28
-	identifier: SHIFT; goto 18
-	value: SHIFT; goto 27
-26:	SEMIC: REDUCE subtraction = value.v MINUS ZERO
-27:	SEMIC: REDUCE subtraction = value.v1 MINUS value.v2
-28:	SEMIC: REDUCE subtraction = value.v MINUS ONE
+24:	[any]: REDUCE identifier = PIDENTIFIER.p LBRACKET ZERO RBRACKET
+25:	RBRACKET: SHIFT; goto 26
+26:	[any]: REDUCE identifier = PIDENTIFIER.p LBRACKET ONE RBRACKET
+27:	RBRACKET: SHIFT; goto 28
+28:	[any]: REDUCE identifier = PIDENTIFIER.p1 LBRACKET PIDENTIFIER.p2 RBRACKET
 29:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
 	ZERO: SHIFT; goto 30
-	ONE: SHIFT; goto 31
+	ONE: SHIFT; goto 32
 	identifier: SHIFT; goto 18
-	value: SHIFT; goto 32
-30:	SEMIC: REDUCE multiplication = value MULT ZERO
-31:	SEMIC: REDUCE multiplication = value.v MULT ONE
-32:	SEMIC: REDUCE multiplication = value.v1 MULT value.v2
+	value: SHIFT; goto 31
+30:	SEMIC: REDUCE subtraction = value.v MINUS ZERO
+31:	SEMIC: REDUCE subtraction = value.v1 MINUS value.v2
+32:	SEMIC: REDUCE subtraction = value.v MINUS ONE
 33:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
 	ZERO: SHIFT; goto 34
 	ONE: SHIFT; goto 35
 	identifier: SHIFT; goto 18
 	value: SHIFT; goto 36
-34:	SEMIC: REDUCE division = value DIV ZERO
-35:	SEMIC: REDUCE division = value.v DIV ONE
-36:	SEMIC: REDUCE division = value.v1 DIV value.v2
+34:	SEMIC: REDUCE multiplication = value MULT ZERO
+35:	SEMIC: REDUCE multiplication = value.v MULT ONE
+36:	SEMIC: REDUCE multiplication = value.v1 MULT value.v2
 37:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
 	ZERO: SHIFT; goto 38
 	ONE: SHIFT; goto 39
 	identifier: SHIFT; goto 18
 	value: SHIFT; goto 40
-38:	SEMIC: REDUCE modulo = value MOD ZERO
-39:	SEMIC: REDUCE modulo = value MOD ONE
-40:	SEMIC: REDUCE modulo = value.v1 MOD value.v2
-41:	SEMIC: REDUCE expression = addition
-42:	SEMIC: REDUCE expression = subtraction
-43:	SEMIC: REDUCE expression = multiplication
-44:	SEMIC: REDUCE expression = division
-45:	SEMIC: REDUCE expression = modulo
-46:	PLUS: SHIFT; goto 47
-	MINUS: SHIFT; goto 49
-	MULT: SHIFT; goto 51
-	MOD: SHIFT; goto 55
-	DIV: SHIFT; goto 53
-47:	PIDENTIFIER: SHIFT; goto 19
+38:	SEMIC: REDUCE division = value DIV ZERO
+39:	SEMIC: REDUCE division = value.v DIV ONE
+40:	SEMIC: REDUCE division = value.v1 DIV value.v2
+41:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
+	ZERO: SHIFT; goto 42
+	ONE: SHIFT; goto 43
 	identifier: SHIFT; goto 18
-	value: SHIFT; goto 48
-48:	SEMIC: REDUCE addition = ZERO PLUS value.v
-49:	PIDENTIFIER: SHIFT; goto 19
-	NUMBER: SHIFT; goto 17
-	identifier: SHIFT; goto 18
-	value: SHIFT; goto 50
-50:	SEMIC: REDUCE subtraction = ZERO MINUS value
+	value: SHIFT; goto 44
+42:	SEMIC: REDUCE modulo = value MOD ZERO
+43:	SEMIC: REDUCE modulo = value MOD ONE
+44:	SEMIC: REDUCE modulo = value.v1 MOD value.v2
+45:	SEMIC: REDUCE expression = addition
+46:	SEMIC: REDUCE expression = subtraction
+47:	SEMIC: REDUCE expression = multiplication
+48:	SEMIC: REDUCE expression = division
+49:	SEMIC: REDUCE expression = modulo
+50:	SEMIC: REDUCE value = ZERO
+	PLUS: SHIFT; goto 51
+	MINUS: SHIFT; goto 55
+	MULT: SHIFT; goto 57
+	MOD: SHIFT; goto 61
+	DIV: SHIFT; goto 59
 51:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
+	ZERO: SHIFT; goto 53
+	ONE: SHIFT; goto 54
 	identifier: SHIFT; goto 18
 	value: SHIFT; goto 52
-52:	SEMIC: REDUCE multiplication = ZERO MULT value
-53:	PIDENTIFIER: SHIFT; goto 19
-	NUMBER: SHIFT; goto 17
-	identifier: SHIFT; goto 18
-	value: SHIFT; goto 54
-54:	SEMIC: REDUCE division = ZERO DIV value
+52:	SEMIC: REDUCE addition = ZERO PLUS value.v
+53:	SEMIC: REDUCE value = ZERO
+54:	SEMIC: REDUCE value = ONE
 55:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
+	ZERO: SHIFT; goto 53
+	ONE: SHIFT; goto 54
 	identifier: SHIFT; goto 18
 	value: SHIFT; goto 56
-56:	SEMIC: REDUCE modulo = ZERO MOD value
-57:	PLUS: SHIFT; goto 58
-	MINUS: SHIFT; goto 60
-	MULT: SHIFT; goto 62
-	MOD: SHIFT; goto 64
-58:	PIDENTIFIER: SHIFT; goto 19
+56:	SEMIC: REDUCE subtraction = ZERO MINUS value
+57:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
+	ZERO: SHIFT; goto 53
+	ONE: SHIFT; goto 54
 	identifier: SHIFT; goto 18
-	value: SHIFT; goto 59
-59:	SEMIC: REDUCE addition = ONE PLUS value.v2
-60:	PIDENTIFIER: SHIFT; goto 19
+	value: SHIFT; goto 58
+58:	SEMIC: REDUCE multiplication = ZERO MULT value
+59:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
+	ZERO: SHIFT; goto 53
+	ONE: SHIFT; goto 54
 	identifier: SHIFT; goto 18
-	value: SHIFT; goto 61
-61:	SEMIC: REDUCE subtraction = ONE MINUS value.v
-62:	PIDENTIFIER: SHIFT; goto 19
+	value: SHIFT; goto 60
+60:	SEMIC: REDUCE division = ZERO DIV value
+61:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
+	ZERO: SHIFT; goto 53
+	ONE: SHIFT; goto 54
 	identifier: SHIFT; goto 18
-	value: SHIFT; goto 63
-63:	SEMIC: REDUCE multiplication = ONE MULT value.v
+	value: SHIFT; goto 62
+62:	SEMIC: REDUCE modulo = ZERO MOD value
+63:	PLUS: SHIFT; goto 64
+	MINUS: SHIFT; goto 66
+	MULT: SHIFT; goto 68
+	MOD: SHIFT; goto 70
+	[any]: REDUCE value = ONE
 64:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
+	ZERO: SHIFT; goto 53
+	ONE: SHIFT; goto 54
 	identifier: SHIFT; goto 18
 	value: SHIFT; goto 65
-65:	SEMIC: REDUCE modulo = ONE MOD value
+65:	SEMIC: REDUCE addition = ONE PLUS value.v2
 66:	PIDENTIFIER: SHIFT; goto 19
-	identifier: SHIFT; goto 67
-67:	SEMIC: SHIFT; goto 68
-68:	[any]: REDUCE command = READ identifier.i SEMIC
-69:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
+	ZERO: SHIFT; goto 53
+	ONE: SHIFT; goto 54
 	identifier: SHIFT; goto 18
-	value: SHIFT; goto 70
-70:	SEMIC: SHIFT; goto 71
-71:	[any]: REDUCE command = WRITE value.v SEMIC
-72:	SEMIC: SHIFT; goto 73
-73:	[any]: REDUCE command = SKIP SEMIC
-74:	[any]: REDUCE commands = command.c
-75:	LBRACKET: SHIFT; goto 76
+	value: SHIFT; goto 67
+67:	SEMIC: REDUCE subtraction = ONE MINUS value.v
+68:	PIDENTIFIER: SHIFT; goto 19
+	NUMBER: SHIFT; goto 17
+	ZERO: SHIFT; goto 53
+	ONE: SHIFT; goto 54
+	identifier: SHIFT; goto 18
+	value: SHIFT; goto 69
+69:	SEMIC: REDUCE multiplication = ONE MULT value.v
+70:	PIDENTIFIER: SHIFT; goto 19
+	NUMBER: SHIFT; goto 17
+	ZERO: SHIFT; goto 53
+	ONE: SHIFT; goto 54
+	identifier: SHIFT; goto 18
+	value: SHIFT; goto 71
+71:	SEMIC: REDUCE modulo = ONE MOD value
+72:	PIDENTIFIER: SHIFT; goto 19
+	identifier: SHIFT; goto 73
+73:	SEMIC: SHIFT; goto 74
+74:	[any]: REDUCE command = READ identifier.i SEMIC
+75:	PIDENTIFIER: SHIFT; goto 19
+	NUMBER: SHIFT; goto 17
+	ZERO: SHIFT; goto 53
+	ONE: SHIFT; goto 54
+	identifier: SHIFT; goto 18
+	value: SHIFT; goto 76
+76:	SEMIC: SHIFT; goto 77
+77:	[any]: REDUCE command = WRITE value.v SEMIC
+78:	SEMIC: SHIFT; goto 79
+79:	[any]: REDUCE command = SKIP SEMIC
+80:	[any]: REDUCE commands = command.c
+81:	LBRACKET: SHIFT; goto 82
 	[any]: REDUCE vdeclarations = vdeclarations.v PIDENTIFIER.p
-76:	NUMBER: SHIFT; goto 77
-77:	RBRACKET: SHIFT; goto 78
-78:	[any]: REDUCE vdeclarations = vdeclarations.v PIDENTIFIER.p LBRACKET NUMBER.n RBRACKET
+82:	NUMBER: SHIFT; goto 83
+83:	RBRACKET: SHIFT; goto 84
+84:	[any]: REDUCE vdeclarations = vdeclarations.v PIDENTIFIER.p LBRACKET NUMBER.n RBRACKET

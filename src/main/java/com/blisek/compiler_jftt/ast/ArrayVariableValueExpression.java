@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import com.blisek.compiler_jftt.context.Context;
 import com.blisek.compiler_jftt.context.Register;
+import com.blisek.compiler_jftt.helpers.OperationsHelper;
 import com.blisek.compiler_jftt.helpers.Preconditions;
 import com.blisek.compiler_jftt.structs.Deallocator;
 import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
@@ -56,4 +57,11 @@ public class ArrayVariableValueExpression extends ValueExpression {
 		
 	}
 
+	public VariableInfo getVariable() {
+		return variable;
+	}
+
+	public VariableInfo getIndexVar() {
+		return indexVar;
+	}
 }

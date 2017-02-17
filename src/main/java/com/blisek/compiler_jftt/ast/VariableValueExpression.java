@@ -6,6 +6,7 @@ import com.blisek.compiler_jftt.context.Context;
 import com.blisek.compiler_jftt.context.Register;
 import com.blisek.compiler_jftt.exceptions.UsedUndeclaredVariableCompilationException;
 import com.blisek.compiler_jftt.exceptions.UsedUninitialisedVariableCompilationException;
+import com.blisek.compiler_jftt.helpers.OperationsHelper;
 import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.structs.VariableInfo;
 

@@ -3,6 +3,7 @@ package com.blisek.compiler_jftt.ast;
 import java.math.BigInteger;
 
 import com.blisek.compiler_jftt.context.Context;
+import com.blisek.compiler_jftt.helpers.OperationsHelper;
 import com.blisek.compiler_jftt.structs.Deallocator;
 import com.blisek.compiler_jftt.structs.RegisterReservationInfo;
 import com.blisek.compiler_jftt.structs.VariableInfo;
@@ -45,6 +46,7 @@ public class ReadExpression extends SingleExpression {
 					Instructions.STORE_i, reservedReg.getRegister()));
 		}
 		
+		variable.setValueAssigned(true);
 		return writer.getNextLineNumber() - startLineNumber;
 	}
 

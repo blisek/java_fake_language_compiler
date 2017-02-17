@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import com.blisek.compiler_jftt.context.Context;
 import com.blisek.compiler_jftt.context.Register;
+import com.blisek.compiler_jftt.helpers.OperationsHelper;
 import com.blisek.compiler_jftt.structs.Deallocator;
 import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.structs.RegisterReservationInfo;
