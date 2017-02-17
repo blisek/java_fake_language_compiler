@@ -9,8 +9,10 @@ public class VariableInfo {
 	private final String variableName;
 	private MemoryAllocationInfo[] assignedMemoryCells;
 	private BigInteger value;
-	private int length;
+	private BigInteger length;
+	private boolean variableDeclared;
 	private boolean valueAssigned;
+	private boolean readonly;
 	
 	public static VariableInfo of(String name) {
 		VariableInfo varInfo = _variables.get(name);
@@ -23,7 +25,7 @@ public class VariableInfo {
 	
 	protected VariableInfo(String varName) {
 		this.variableName = varName;
-		this.length = 1;
+		this.length = BigInteger.ONE;
 	}
 	
 	public MemoryAllocationInfo[] getAssignedMemoryCells() {
@@ -42,11 +44,11 @@ public class VariableInfo {
 		this.value = value;
 	}
 
-	public int getLength() {
+	public BigInteger getLength() {
 		return length;
 	}
 
-	public void setLength(int length) {
+	public void setLength(BigInteger length) {
 		this.length = length;
 	}
 
@@ -57,9 +59,25 @@ public class VariableInfo {
 	public void setValueAssigned(boolean valueAssigned) {
 		this.valueAssigned = valueAssigned;
 	}
+	
+	public boolean isVariableDeclared() {
+		return variableDeclared;
+	}
+
+	public void setVariableDeclared(boolean variableDeclared) {
+		this.variableDeclared = variableDeclared;
+	}
 
 	public String getVariableName() {
 		return variableName;
+	}
+
+	public boolean isReadonly() {
+		return readonly;
+	}
+
+	public void setReadonly(boolean readonly) {
+		this.readonly = readonly;
 	}
 	
 }

@@ -41,20 +41,21 @@ class ExpressionScanner extends Scanner {
   private static final String ZZ_CMAP_PACKED = 
     "\11\0\1\2\1\1\1\7\1\1\1\1\22\0\1\2\4\0\1\21"+
     "\4\0\1\15\1\17\1\0\1\20\1\0\1\16\1\5\11\3\1\12"+
-    "\1\14\1\0\1\13\3\0\1\31\1\22\1\0\1\27\1\23\1\0"+
-    "\1\24\1\0\1\25\1\0\1\35\2\0\1\26\1\0\1\36\1\0"+
-    "\1\30\1\34\1\33\2\0\1\32\7\0\1\11\1\0\32\11\1\6"+
-    "\1\0\1\10\7\0\1\7\u05da\0\12\4\206\0\12\4\306\0\12\4"+
-    "\u019c\0\12\4\166\0\12\4\166\0\12\4\166\0\12\4\166\0\12\4"+
-    "\166\0\12\4\166\0\12\4\166\0\12\4\166\0\12\4\166\0\12\4"+
-    "\140\0\12\4\166\0\12\4\106\0\12\4\u0116\0\12\4\106\0\12\4"+
-    "\u0746\0\12\4\46\0\12\4\u012c\0\12\4\200\0\12\4\246\0\12\4"+
-    "\6\0\12\4\266\0\12\4\126\0\12\4\206\0\12\4\6\0\12\4"+
-    "\u03ce\0\1\7\1\7\u85f6\0\12\4\u02a6\0\12\4\46\0\12\4\306\0"+
-    "\12\4\26\0\12\4\126\0\12\4\u0196\0\12\4\u5316\0\12\4\u0586\0"+
-    "\12\4\u0bbc\0\12\4\200\0\12\4\74\0\12\4\220\0\12\4\u0116\0"+
-    "\12\4\u01d6\0\12\4\u0176\0\12\4\146\0\12\4\u0216\0\12\4\u5176\0"+
-    "\12\4\346\0\12\4\u6c74\0\62\4\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\u280f\0";
+    "\1\14\1\0\1\13\3\0\1\33\1\24\1\0\1\31\1\25\1\0"+
+    "\1\26\1\0\1\27\1\0\1\37\2\0\1\30\1\0\1\40\1\0"+
+    "\1\32\1\36\1\35\1\0\1\41\1\34\3\0\1\22\1\0\1\23"+
+    "\1\0\1\11\1\0\32\11\1\6\1\0\1\10\7\0\1\7\u05da\0"+
+    "\12\4\206\0\12\4\306\0\12\4\u019c\0\12\4\166\0\12\4\166\0"+
+    "\12\4\166\0\12\4\166\0\12\4\166\0\12\4\166\0\12\4\166\0"+
+    "\12\4\166\0\12\4\166\0\12\4\140\0\12\4\166\0\12\4\106\0"+
+    "\12\4\u0116\0\12\4\106\0\12\4\u0746\0\12\4\46\0\12\4\u012c\0"+
+    "\12\4\200\0\12\4\246\0\12\4\6\0\12\4\266\0\12\4\126\0"+
+    "\12\4\206\0\12\4\6\0\12\4\u03ce\0\1\7\1\7\u85f6\0\12\4"+
+    "\u02a6\0\12\4\46\0\12\4\306\0\12\4\26\0\12\4\126\0\12\4"+
+    "\u0196\0\12\4\u5316\0\12\4\u0586\0\12\4\u0bbc\0\12\4\200\0\12\4"+
+    "\74\0\12\4\220\0\12\4\u0116\0\12\4\u01d6\0\12\4\u0176\0\12\4"+
+    "\146\0\12\4\u0216\0\12\4\u5176\0\12\4\346\0\12\4\u6c74\0\62\4"+
+    "\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\u280f\0";
 
   /** 
    * Translates characters to character classes
@@ -68,12 +69,12 @@ class ExpressionScanner extends Scanner {
 
   private static final String ZZ_ACTION_PACKED_0 =
     "\1\0\1\1\1\2\1\3\1\4\1\1\1\5\1\1"+
-    "\1\6\1\7\1\10\1\11\1\12\1\13\5\1\1\0"+
-    "\1\14\1\15\6\0\1\16\4\0\1\17\1\0\1\20"+
-    "\1\21\1\22";
+    "\1\6\1\7\1\10\1\11\1\12\1\13\1\14\1\15"+
+    "\6\1\1\0\1\16\1\17\7\0\1\20\3\0\1\21"+
+    "\1\0\1\22\1\0\1\23\1\24\1\25";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[38];
+    int [] result = new int[43];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -98,14 +99,15 @@ class ExpressionScanner extends Scanner {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\37\0\76\0\135\0\37\0\174\0\233\0\272"+
-    "\0\37\0\37\0\37\0\37\0\37\0\37\0\331\0\370"+
-    "\0\u0117\0\u0136\0\u0155\0\174\0\174\0\37\0\u0174\0\u0193"+
-    "\0\u01b2\0\u01d1\0\u01f0\0\u020f\0\37\0\u022e\0\u024d\0\u026c"+
-    "\0\u028b\0\37\0\u02aa\0\37\0\37\0\37";
+    "\0\0\0\42\0\104\0\146\0\42\0\210\0\252\0\314"+
+    "\0\42\0\42\0\42\0\42\0\42\0\42\0\42\0\42"+
+    "\0\356\0\u0110\0\u0132\0\u0154\0\u0176\0\u0198\0\210\0\210"+
+    "\0\42\0\u01ba\0\u01dc\0\u01fe\0\u0220\0\u0242\0\u0264\0\u0286"+
+    "\0\42\0\u02a8\0\u02ca\0\u02ec\0\42\0\u030e\0\42\0\u0330"+
+    "\0\42\0\42\0\42";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[38];
+    int [] result = new int[43];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -130,17 +132,18 @@ class ExpressionScanner extends Scanner {
   private static final String ZZ_TRANS_PACKED_0 =
     "\1\2\2\3\1\4\1\2\1\5\1\6\1\0\1\2"+
     "\1\7\1\10\1\2\1\11\1\12\1\13\1\14\1\15"+
-    "\1\16\1\17\1\20\4\2\1\21\1\2\1\22\1\2"+
-    "\1\23\2\2\40\0\2\3\37\0\3\4\31\0\1\24"+
-    "\1\0\5\24\1\0\1\25\26\24\11\0\1\7\40\0"+
-    "\1\26\46\0\1\27\41\0\1\30\33\0\1\31\43\0"+
-    "\1\32\43\0\1\33\25\0\1\34\41\0\1\35\40\0"+
-    "\1\36\32\0\1\37\36\0\1\40\36\0\1\41\40\0"+
-    "\1\42\42\0\1\43\41\0\1\44\26\0\1\45\33\0"+
-    "\1\46\13\0";
+    "\1\16\1\17\1\20\1\21\1\22\4\2\1\23\1\2"+
+    "\1\24\1\2\1\25\2\2\1\26\43\0\2\3\42\0"+
+    "\3\4\34\0\1\27\1\0\5\27\1\0\1\30\31\27"+
+    "\11\0\1\7\43\0\1\31\53\0\1\32\44\0\1\33"+
+    "\36\0\1\34\46\0\1\35\46\0\1\36\35\0\1\37"+
+    "\34\0\1\40\44\0\1\41\43\0\1\42\35\0\1\43"+
+    "\41\0\1\44\44\0\1\45\36\0\1\46\43\0\1\47"+
+    "\45\0\1\50\44\0\1\51\31\0\1\52\36\0\1\53"+
+    "\14\0";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[713];
+    int [] result = new int[850];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -178,11 +181,12 @@ class ExpressionScanner extends Scanner {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\1\0\1\11\2\1\1\11\3\1\6\11\5\1\1\0"+
-    "\1\1\1\11\6\0\1\11\4\0\1\11\1\0\3\11";
+    "\1\0\1\11\2\1\1\11\3\1\10\11\6\1\1\0"+
+    "\1\1\1\11\7\0\1\11\3\0\1\11\1\0\1\11"+
+    "\1\0\3\11";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[38];
+    int [] result = new int[43];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -293,7 +297,7 @@ class ExpressionScanner extends Scanner {
     char [] map = new char[0x110000];
     int i = 0;  /* index in packed string  */
     int j = 0;  /* index in unpacked array */
-    while (i < 342) {
+    while (i < 352) {
       int  count = packed.charAt(i++);
       char value = packed.charAt(i++);
       do map[j++] = value; while (--count > 0);
@@ -647,77 +651,89 @@ class ExpressionScanner extends Scanner {
           case 1: 
             { throw new Scanner.Exception("unexpected character '" + yytext() + "'");
             }
-          case 19: break;
+          case 22: break;
           case 2: 
             { /* ignore */
             }
-          case 20: break;
+          case 23: break;
           case 3: 
             { final String yyt = yytext();
 					if("1".equals(yyt)) return newToken(Terminals.ONE, BigInteger.ONE);
 					return newToken(Terminals.NUMBER, new BigInteger(yyt));
             }
-          case 21: break;
+          case 24: break;
           case 4: 
             { return newToken(Terminals.ZERO, BigInteger.ZERO);
             }
-          case 22: break;
+          case 25: break;
           case 5: 
             { return newToken(Terminals.PIDENTIFIER, yytext());
             }
-          case 23: break;
+          case 26: break;
           case 6: 
             { return newToken(Terminals.SEMIC);
             }
-          case 24: break;
+          case 27: break;
           case 7: 
             { return newToken(Terminals.MULT);
             }
-          case 25: break;
+          case 28: break;
           case 8: 
             { return newToken(Terminals.DIV);
             }
-          case 26: break;
+          case 29: break;
           case 9: 
             { return newToken(Terminals.PLUS);
             }
-          case 27: break;
+          case 30: break;
           case 10: 
             { return newToken(Terminals.MINUS);
             }
-          case 28: break;
+          case 31: break;
           case 11: 
             { return newToken(Terminals.MOD);
             }
-          case 29: break;
-          case 12: 
-            { 
-            }
-          case 30: break;
-          case 13: 
-            { return newToken(Terminals.ASSIGN);
-            }
-          case 31: break;
-          case 14: 
-            { return newToken(Terminals.END);
-            }
           case 32: break;
-          case 15: 
-            { return newToken(Terminals.READ);
+          case 12: 
+            { return newToken(Terminals.LBRACKET);
             }
           case 33: break;
-          case 16: 
-            { return newToken(Terminals.SKIP);
+          case 13: 
+            { return newToken(Terminals.RBRACKET);
             }
           case 34: break;
-          case 17: 
-            { return newToken(Terminals.BEGIN);
+          case 14: 
+            { 
             }
           case 35: break;
-          case 18: 
-            { return newToken(Terminals.WRITE);
+          case 15: 
+            { return newToken(Terminals.ASSIGN);
             }
           case 36: break;
+          case 16: 
+            { return newToken(Terminals.END);
+            }
+          case 37: break;
+          case 17: 
+            { return newToken(Terminals.VAR);
+            }
+          case 38: break;
+          case 18: 
+            { return newToken(Terminals.READ);
+            }
+          case 39: break;
+          case 19: 
+            { return newToken(Terminals.SKIP);
+            }
+          case 40: break;
+          case 20: 
+            { return newToken(Terminals.BEGIN);
+            }
+          case 41: break;
+          case 21: 
+            { return newToken(Terminals.WRITE);
+            }
+          case 42: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }

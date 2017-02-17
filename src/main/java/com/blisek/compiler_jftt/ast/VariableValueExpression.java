@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import com.blisek.compiler_jftt.context.Context;
 import com.blisek.compiler_jftt.context.Register;
+import com.blisek.compiler_jftt.exceptions.UsedUndeclaredVariableCompilationException;
 import com.blisek.compiler_jftt.exceptions.UsedUninitialisedVariableCompilationException;
 import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
 import com.blisek.compiler_jftt.structs.VariableInfo;
@@ -37,15 +38,10 @@ public class VariableValueExpression extends ValueExpression {
 	protected void loadValueIntoRegister(Context ctx, Register addressRegister, Register destinationRegister) {
 		BigInteger val = variable.getValue();
 		MemoryAllocationInfo[] mai = variable.getAssignedMemoryCells();
+		
 		// TODO: sprawdzanie czy zmienna została zainicjalizowana
-		if(mai == null) {
-			if(!variable.isValueAssigned()) {
-				String msg = "[%s-%s] Use of uninitialised variable \"%s\"!";
-				String startPos = String.format("%d,%d", getLine(start), getColumn(start));
-				String endPos = String.format("%d,%d", getLine(end), getColumn(end));
-				throw new UsedUninitialisedVariableCompilationException(String.format(msg, startPos, endPos, variable.getVariableName()));
-			}
-		}
+		assureVariableDeclared();
+		assureValueAssigned();
 		
 		BigInteger cellAddress = mai[0].getCellAddress(BigInteger.ZERO);
 		if(val == null) {
@@ -60,6 +56,24 @@ public class VariableValueExpression extends ValueExpression {
 			else {
 				OperationsHelper.loadRegister(ctx, destinationRegister, cellAddress);
 			}
+		}
+	}
+	
+	private void assureVariableDeclared() {
+		if(!variable.isVariableDeclared()) {
+			String msg = "[%s-%s] Undeclared variable \"%s\" used.";
+			String startPos = String.format("%d,%d", getLine(start), getColumn(start));
+			String endPos = String.format("%d,%d", getLine(end), getColumn(end));
+			throw new UsedUndeclaredVariableCompilationException(String.format(msg, startPos, endPos, variable.getVariableName()));
+		}
+	}
+	
+	private void assureValueAssigned() {
+		if(variable.getAssignedMemoryCells() == null || !variable.isValueAssigned()) {
+			String msg = "[%s-%s] Use of uninitialised variable \"%s\"!";
+			String startPos = String.format("%d,%d", getLine(start), getColumn(start));
+			String endPos = String.format("%d,%d", getLine(end), getColumn(end));
+			throw new UsedUninitialisedVariableCompilationException(String.format(msg, startPos, endPos, variable.getVariableName()));
 		}
 	}
 

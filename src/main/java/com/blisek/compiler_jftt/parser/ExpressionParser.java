@@ -1,6 +1,7 @@
 package com.blisek.compiler_jftt.parser;
 
 import com.blisek.compiler_jftt.ast.*;
+import java.util.List;
 import com.blisek.compiler_jftt.structs.*;
 import java.math.BigInteger;
 import beaver.*;
@@ -19,44 +20,79 @@ public class ExpressionParser extends Parser {
 		static public final short NUMBER = 3;
 		static public final short ZERO = 4;
 		static public final short ONE = 5;
-		static public final short PLUS = 6;
-		static public final short MULT = 7;
-		static public final short MOD = 8;
-		static public final short READ = 9;
-		static public final short WRITE = 10;
-		static public final short SKIP = 11;
-		static public final short MINUS = 12;
-		static public final short DIV = 13;
-		static public final short BEGIN = 14;
-		static public final short END = 15;
-		static public final short ASSIGN = 16;
+		static public final short RBRACKET = 6;
+		static public final short PLUS = 7;
+		static public final short MINUS = 8;
+		static public final short MULT = 9;
+		static public final short MOD = 10;
+		static public final short LBRACKET = 11;
+		static public final short READ = 12;
+		static public final short WRITE = 13;
+		static public final short SKIP = 14;
+		static public final short DIV = 15;
+		static public final short VAR = 16;
+		static public final short BEGIN = 17;
+		static public final short END = 18;
+		static public final short ASSIGN = 19;
 	}
 
 	static final ParsingTables PARSING_TABLES = new ParsingTables(
-		"U9ojqzbF4r4O1V0pqx9K4De2fPH5HKLKL92AW8ZYWoQQOAA99lhWWm##kA#uxqlK#F#vx$k" +
-		"2kE$7CvSFCfcKc1Yc#SsvSx#RExUtlG1k88afCXMbc85cpCGipEOt5CF7IiHGXXeq8gKHrK" +
-		"YZJfb5DvQX7tCm7uiGHuetCHSBDAOILLOBsYteS5cE2fSPrBhCeTvb4wQHM8myklIs4XHfx" +
-		"WQPxgf9j5hEisopN6ZPRjbfkSHogMKV4lp0znpcMxxcAxxWCpxbOpxYGpxWNNxb5txc9txa" +
-		"2D$m9P$mFj$nEU#XHpFqOZbMADDEZLjzLjy$1qyz5VgcrMxLfTgdO4IvTZ38X7Qpp2gLgjM" +
-		"xYg#TZ5jjj5tqpuJD4knzrVXAWkfafFUVdvHc66q10sTq8$b7qIH9wG$wT7LAg#oqvuIqoI" +
-		"xPBNk2$Z6wccMlx9DssIy7vA3avP0SbYFIBKDoL8x9SJaX9#MKd9QChB7frybPMI$dPAESb" +
-		"yroGNfagroKRN99jijbkI9NROqxv9grhqVMNwnz#A7i2FUhRpZoF19#ZipXX#UBrFAHvww9" +
-		"vecCwxKS#rrMMQwsN1iQEsYvmNAJvL1ep9O9tZE0ySlz7uBy5UgxmzkyXKc##DFTjU$ypjz" +
-		"gjkYynNGoVV5qQk8ICxvEiLTGHlMesf1i0NKHkGA2KvPsPyP3mrzyagGf");
+		"U9orrDbF4r4K1l2lKmeMB2gsfRGK4LmGGS22gAY8gAXrUU211n9vqCGO7umlxblSzttVufl" +
+		"$Z$k#xwAuxthyvlRKD6EDcEYT$EQxT#umS#UK6G1da8UUwCjzBsHZ2Cen51Meb7UOW4cOWZ" +
+		"ZdV2X050FPwuDX68N#EjS36SX29gfGWnZgpNmkUgFEzC8eD5c4VYPBK6fo40PZDCPW7CRp2" +
+		"XQcoLbua8y0rn2XOXf0PURiF5Hh3jUirHoXELApGNEiPgDca#Pak4NWHOvqoNFfX1$DybGU" +
+		"oqC44P87Sa$ko6svAJVakboJo$9MtiXhUIKlvOKyaVjoIwxACtaaT#KAm6jEH0kcmcupa6Z" +
+		"JCPDN3V2Px7q1An1X3QAiW8irzh4s5hSiFhMNjRRWPlqyh7jYpizL1hdEN#UJlTzbyY$yh7" +
+		"sGrGwP6NiDgPB7$bNccoguTClXiKGlavlhRpR#AbQonxvRJECLCtc7MMiJjQtIz6cjSscn7" +
+		"fjhLW8iqN4sbT9IMaRBxUCwjuYQQ8MELsgMqIfQJMkeWjRHUjf0rRIHDj5cggKjj9MsqNRQ" +
+		"GJjf5#scCCLfZ$qSj9TQQH#rqNvgfmCKemuwI7Fe4CsZmxI0Zj1HEgxhNKWdj7yovVcEqIa" +
+		"wdNAiX6PhlvoyoJaRIztf67UbZl#4hSOnZZd6TOvnVJUlsw3PgDcisQ8PJpat#N$IgjccsQ" +
+		"uvF#NSZcxUt$xD85#XJRveViBF9fVaebmmlVDq3l#boKUp$q3lvRDyDwDlt5NoRRU$dHPvp" +
+		"1jfl$iXlaj1VXc2V5CJB7wDN6c5EUyKIQCmZQX3KHe1tiFcDpACuX##xCo3");
 
 	private final Action[] actions;
 
 	public ExpressionParser() {
 		super(PARSING_TABLES);
 		actions = new Action[] {
-			new Action() {	// [0] program = BEGIN commands.c END
+			new Action() {	// [0] program = VAR vdeclarations.v BEGIN commands.c END
 				public Symbol reduce(Symbol[] _symbols, int offset) {
-					final Symbol _symbol_c = _symbols[offset + 2];
+					final Symbol _symbol_v = _symbols[offset + 2];
+					final VDeclarationsExpression v = (VDeclarationsExpression) _symbol_v.value;
+					final Symbol _symbol_c = _symbols[offset + 4];
 					final Expression c = (Expression) _symbol_c.value;
-					 return new ProgramExpression(c);
+					 return new ProgramExpression(c, v);
 				}
 			},
-			new Action() {	// [1] commands = commands.s command.c
+			new Action() {	// [1] vdeclarations = vdeclarations.v PIDENTIFIER.p
+				public Symbol reduce(Symbol[] _symbols, int offset) {
+					final Symbol _symbol_v = _symbols[offset + 1];
+					final VDeclarationsExpression v = (VDeclarationsExpression) _symbol_v.value;
+					final Symbol _symbol_p = _symbols[offset + 2];
+					final String p = (String) _symbol_p.value;
+					 VDeclaration vd = VDeclaration.of(p); 
+						return VDeclarationHelper.extendOrMakeListOfVDec(vd, v);
+				}
+			},
+			new Action() {	// [2] vdeclarations = vdeclarations.v PIDENTIFIER.p LBRACKET NUMBER.n RBRACKET
+				public Symbol reduce(Symbol[] _symbols, int offset) {
+					final Symbol _symbol_v = _symbols[offset + 1];
+					final VDeclarationsExpression v = (VDeclarationsExpression) _symbol_v.value;
+					final Symbol _symbol_p = _symbols[offset + 2];
+					final String p = (String) _symbol_p.value;
+					final Symbol _symbol_n = _symbols[offset + 4];
+					final BigInteger n = (BigInteger) _symbol_n.value;
+					 
+						VDeclaration vd = VDeclaration.arrayOf(p, n); 
+						return VDeclarationHelper.extendOrMakeListOfVDec(vd, v);
+				}
+			},
+			new Action() {	// [3] vdeclarations = 
+				public Symbol reduce(Symbol[] _symbols, int offset) {
+					 return new VDeclarationsExpression();
+				}
+			},
+			new Action() {	// [4] commands = commands.s command.c
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_s = _symbols[offset + 1];
 					final Expression s = (Expression) _symbol_s.value;
@@ -65,14 +101,14 @@ public class ExpressionParser extends Parser {
 					 return new Expression(s, c);
 				}
 			},
-			new Action() {	// [2] commands = command.c
+			new Action() {	// [5] commands = command.c
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_c = _symbols[offset + 1];
 					final Expression c = (Expression) _symbol_c.value;
 					 return c;
 				}
 			},
-			new Action() {	// [3] command = identifier.i ASSIGN expression.e SEMIC
+			new Action() {	// [6] command = identifier.i ASSIGN expression.e SEMIC
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_i = _symbols[offset + 1];
 					final ValueExpression i = (ValueExpression) _symbol_i.value;
@@ -81,46 +117,46 @@ public class ExpressionParser extends Parser {
 					 return new AssignmentExpression(i, e);
 				}
 			},
-			new Action() {	// [4] command = READ identifier.i SEMIC
+			new Action() {	// [7] command = READ identifier.i SEMIC
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_i = _symbols[offset + 2];
 					final ValueExpression i = (ValueExpression) _symbol_i.value;
 					 return new ReadExpression(i);
 				}
 			},
-			new Action() {	// [5] command = WRITE value.v SEMIC
+			new Action() {	// [8] command = WRITE value.v SEMIC
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_v = _symbols[offset + 2];
 					final ValueExpression v = (ValueExpression) _symbol_v.value;
 					 return new WriteExpression(v);
 				}
 			},
-			new Action() {	// [6] command = SKIP SEMIC
+			new Action() {	// [9] command = SKIP SEMIC
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					 return new SkipExpression();
 				}
 			},
-			Action.RETURN,	// [7] expression = value
-			Action.RETURN,	// [8] expression = addition
-			Action.RETURN,	// [9] expression = subtraction
-			Action.RETURN,	// [10] expression = multiplication
-			Action.RETURN,	// [11] expression = division
-			Action.RETURN,	// [12] expression = modulo
-			new Action() {	// [13] addition = value.v PLUS ZERO
+			Action.RETURN,	// [10] expression = value
+			Action.RETURN,	// [11] expression = addition
+			Action.RETURN,	// [12] expression = subtraction
+			Action.RETURN,	// [13] expression = multiplication
+			Action.RETURN,	// [14] expression = division
+			Action.RETURN,	// [15] expression = modulo
+			new Action() {	// [16] addition = value.v PLUS ZERO
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_v = _symbols[offset + 1];
 					final ValueExpression v = (ValueExpression) _symbol_v.value;
 					 return v;
 				}
 			},
-			new Action() {	// [14] addition = ZERO PLUS value.v
+			new Action() {	// [17] addition = ZERO PLUS value.v
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_v = _symbols[offset + 3];
 					final ValueExpression v = (ValueExpression) _symbol_v.value;
 					 return v;
 				}
 			},
-			new Action() {	// [15] addition = value.v1 PLUS value.v2
+			new Action() {	// [18] addition = value.v1 PLUS value.v2
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_v1 = _symbols[offset + 1];
 					final ValueExpression v1 = (ValueExpression) _symbol_v1.value;
@@ -129,33 +165,33 @@ public class ExpressionParser extends Parser {
 					 return new AdditionExpression(v1, v2);
 				}
 			},
-			new Action() {	// [16] addition = value.v1 PLUS ONE
+			new Action() {	// [19] addition = value.v1 PLUS ONE
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_v1 = _symbols[offset + 1];
 					final ValueExpression v1 = (ValueExpression) _symbol_v1.value;
-					 return new AdditionExpression(v1, new NumberValueExpression(BigInteger.ONE));
+					 return new AdditionExpression(new NumberValueExpression(BigInteger.ONE), v1);
 				}
 			},
-			new Action() {	// [17] addition = ONE PLUS value.v2
+			new Action() {	// [20] addition = ONE PLUS value.v2
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_v2 = _symbols[offset + 3];
 					final ValueExpression v2 = (ValueExpression) _symbol_v2.value;
 					 return new AdditionExpression(new NumberValueExpression(BigInteger.ONE), v2);
 				}
 			},
-			new Action() {	// [18] subtraction = value.v MINUS ZERO
+			new Action() {	// [21] subtraction = value.v MINUS ZERO
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_v = _symbols[offset + 1];
 					final ValueExpression v = (ValueExpression) _symbol_v.value;
 					 return v;
 				}
 			},
-			new Action() {	// [19] subtraction = ZERO MINUS value
+			new Action() {	// [22] subtraction = ZERO MINUS value
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					 return new NumberValueExpression(BigInteger.ZERO);
 				}
 			},
-			new Action() {	// [20] subtraction = value.v1 MINUS value.v2
+			new Action() {	// [23] subtraction = value.v1 MINUS value.v2
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_v1 = _symbols[offset + 1];
 					final ValueExpression v1 = (ValueExpression) _symbol_v1.value;
@@ -164,31 +200,45 @@ public class ExpressionParser extends Parser {
 					 return new SubtractionExpression(v1, v2);
 				}
 			},
-			new Action() {	// [21] multiplication = value MULT ZERO
+			new Action() {	// [24] subtraction = ONE MINUS value.v
+				public Symbol reduce(Symbol[] _symbols, int offset) {
+					final Symbol _symbol_v = _symbols[offset + 3];
+					final ValueExpression v = (ValueExpression) _symbol_v.value;
+					 return new SubtractionExpression(new NumberValueExpression(BigInteger.ONE), v);
+				}
+			},
+			new Action() {	// [25] subtraction = value.v MINUS ONE
+				public Symbol reduce(Symbol[] _symbols, int offset) {
+					final Symbol _symbol_v = _symbols[offset + 1];
+					final ValueExpression v = (ValueExpression) _symbol_v.value;
+					 return new SubtractionExpression(v, new NumberValueExpression(BigInteger.ONE));
+				}
+			},
+			new Action() {	// [26] multiplication = value MULT ZERO
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					 return new NumberValueExpression(BigInteger.ZERO);
 				}
 			},
-			new Action() {	// [22] multiplication = ZERO MULT value
+			new Action() {	// [27] multiplication = ZERO MULT value
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					 return new NumberValueExpression(BigInteger.ZERO);
 				}
 			},
-			new Action() {	// [23] multiplication = value.v MULT ONE
+			new Action() {	// [28] multiplication = value.v MULT ONE
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_v = _symbols[offset + 1];
 					final ValueExpression v = (ValueExpression) _symbol_v.value;
 					 return v;
 				}
 			},
-			new Action() {	// [24] multiplication = ONE MULT value.v
+			new Action() {	// [29] multiplication = ONE MULT value.v
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_v = _symbols[offset + 3];
 					final ValueExpression v = (ValueExpression) _symbol_v.value;
 					 return v;
 				}
 			},
-			new Action() {	// [25] multiplication = value.v1 MULT value.v2
+			new Action() {	// [30] multiplication = value.v1 MULT value.v2
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_v1 = _symbols[offset + 1];
 					final ValueExpression v1 = (ValueExpression) _symbol_v1.value;
@@ -197,24 +247,24 @@ public class ExpressionParser extends Parser {
 					 return new MultiplyExpression(v1, v2);
 				}
 			},
-			new Action() {	// [26] division = value DIV ZERO
+			new Action() {	// [31] division = value DIV ZERO
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					 return new NumberValueExpression(BigInteger.ZERO);
 				}
 			},
-			new Action() {	// [27] division = ZERO DIV value
+			new Action() {	// [32] division = ZERO DIV value
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					 return new NumberValueExpression(BigInteger.ZERO);
 				}
 			},
-			new Action() {	// [28] division = value.v DIV ONE
+			new Action() {	// [33] division = value.v DIV ONE
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_v = _symbols[offset + 1];
 					final ValueExpression v = (ValueExpression) _symbol_v.value;
 					 return v;
 				}
 			},
-			new Action() {	// [29] division = value.v1 DIV value.v2
+			new Action() {	// [34] division = value.v1 DIV value.v2
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_v1 = _symbols[offset + 1];
 					final ValueExpression v1 = (ValueExpression) _symbol_v1.value;
@@ -223,29 +273,27 @@ public class ExpressionParser extends Parser {
 					 return new DivisionExpression(v1, v2);
 				}
 			},
-			new Action() {	// [30] modulo = value MOD ZERO
+			new Action() {	// [35] modulo = value MOD ZERO
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					 return new NumberValueExpression(BigInteger.ZERO);
 				}
 			},
-			new Action() {	// [31] modulo = value.v MOD ONE
-				public Symbol reduce(Symbol[] _symbols, int offset) {
-					final Symbol _symbol_v = _symbols[offset + 1];
-					final ValueExpression v = (ValueExpression) _symbol_v.value;
-					 return v;
-				}
-			},
-			new Action() {	// [32] modulo = ZERO MOD value
+			new Action() {	// [36] modulo = value MOD ONE
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					 return new NumberValueExpression(BigInteger.ZERO);
 				}
 			},
-			new Action() {	// [33] modulo = ONE MOD value
+			new Action() {	// [37] modulo = ZERO MOD value
+				public Symbol reduce(Symbol[] _symbols, int offset) {
+					 return new NumberValueExpression(BigInteger.ZERO);
+				}
+			},
+			new Action() {	// [38] modulo = ONE MOD value
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					 return new NumberValueExpression(BigInteger.ONE);
 				}
 			},
-			new Action() {	// [34] modulo = value.v1 MOD value.v2
+			new Action() {	// [39] modulo = value.v1 MOD value.v2
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_v1 = _symbols[offset + 1];
 					final ValueExpression v1 = (ValueExpression) _symbol_v1.value;
@@ -254,19 +302,37 @@ public class ExpressionParser extends Parser {
 					 return new ModuloExpression(v1, v2);
 				}
 			},
-			new Action() {	// [35] value = NUMBER.n
+			new Action() {	// [40] value = NUMBER.n
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_n = _symbols[offset + 1];
 					final BigInteger n = (BigInteger) _symbol_n.value;
 					 return new NumberValueExpression(n);
 				}
 			},
-			Action.RETURN,	// [36] value = identifier
-			new Action() {	// [37] identifier = PIDENTIFIER.p
+			Action.RETURN,	// [41] value = identifier
+			new Action() {	// [42] identifier = PIDENTIFIER.p
 				public Symbol reduce(Symbol[] _symbols, int offset) {
 					final Symbol _symbol_p = _symbols[offset + 1];
 					final String p = (String) _symbol_p.value;
 					 return new VariableValueExpression(VariableInfo.of(p));
+				}
+			},
+			new Action() {	// [43] identifier = PIDENTIFIER.p LBRACKET NUMBER.n RBRACKET
+				public Symbol reduce(Symbol[] _symbols, int offset) {
+					final Symbol _symbol_p = _symbols[offset + 1];
+					final String p = (String) _symbol_p.value;
+					final Symbol _symbol_n = _symbols[offset + 3];
+					final BigInteger n = (BigInteger) _symbol_n.value;
+					 return new ArrayValueExpression(VariableInfo.of(p), n);
+				}
+			},
+			new Action() {	// [44] identifier = PIDENTIFIER.p1 LBRACKET PIDENTIFIER.p2 RBRACKET
+				public Symbol reduce(Symbol[] _symbols, int offset) {
+					final Symbol _symbol_p1 = _symbols[offset + 1];
+					final String p1 = (String) _symbol_p1.value;
+					final Symbol _symbol_p2 = _symbols[offset + 3];
+					final String p2 = (String) _symbol_p2.value;
+					 return new ArrayVariableValueExpression(VariableInfo.of(p1), p2);
 				}
 			}
 		};

@@ -1,0 +1,9 @@
+VAR
+	a b c d[20] e[2402] f g[9999]
+BEGIN
+c := 5;
+d[0] := c;
+d[1] := d[0] * d[0];
+WRITE d[0];
+WRITE d[1];
+END

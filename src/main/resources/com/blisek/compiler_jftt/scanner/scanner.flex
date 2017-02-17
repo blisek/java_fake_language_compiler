@@ -65,12 +65,15 @@ Identifier = [_a-z]+
 	"+"         { return newToken(Terminals.PLUS); }
 	"-"         { return newToken(Terminals.MINUS); }
 	"%"			{ return newToken(Terminals.MOD); }
+	"["			{ return newToken(Terminals.LBRACKET); }
+	"]"			{ return newToken(Terminals.RBRACKET); }
 	
 	"BEGIN"		{ return newToken(Terminals.BEGIN); }
 	"END"		{ return newToken(Terminals.END); }
 	"READ"		{ return newToken(Terminals.READ); }
 	"WRITE"		{ return newToken(Terminals.WRITE); }
 	"SKIP"		{ return newToken(Terminals.SKIP); }
+	"VAR"		{ return newToken(Terminals.VAR); }
 }
 
 .|\n            { throw new Scanner.Exception("unexpected character '" + yytext() + "'"); }

@@ -64,7 +64,7 @@ public class EagerMemoryAllocationStrategy implements MemoryAllocationStrategy {
 	@Override
 	public MemoryAllocationInfo[] allocateNormalMemory(BigInteger size) {
 		MemoryAllocationInfo mai = new MemoryAllocationInfo(nextCell, size);
-		nextCell = nextCell.add(BigInteger.ONE);
+		nextCell = nextCell.add(size);
 		normalMemory.add(mai);
 		return new MemoryAllocationInfo[] { mai };
 	}

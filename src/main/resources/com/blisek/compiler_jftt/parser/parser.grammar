@@ -2,6 +2,8 @@
 %import "com.blisek.compiler_jftt.ast.*";
 %import "com.blisek.compiler_jftt.structs.*";
 %import "java.math.BigInteger";
+%import "java.util.ArrayList";
+%import "java.util.List";
 %class "ExpressionParser";
 
 %terminals NUMBER, ZERO, ONE, SEMIC, VAR, BEGIN, EOF, PIDENTIFIER;
@@ -23,12 +25,21 @@
 %typeof division = "Expression";
 %typeof modulo = "Expression";
 %typeof value, identifier = "ValueExpression";
+%typeof vdeclarations = "VDeclarationsExpression";
 
 %goal program;
 
 
 program       
-					= BEGIN commands.c END	{: return new ProgramExpression(c); :} 
+					= VAR vdeclarations.v BEGIN commands.c END	{: return new ProgramExpression(c, v); :} 
+					;
+					
+vdeclarations		= vdeclarations.v PIDENTIFIER.p {: VDeclaration vd = VDeclaration.of(p); 
+						return VDeclarationHelper.extendOrMakeListOfVDec(vd, v); :}
+					| vdeclarations.v PIDENTIFIER.p LBRACKET NUMBER.n RBRACKET {: 
+						VDeclaration vd = VDeclaration.arrayOf(p, n); 
+						return VDeclarationHelper.extendOrMakeListOfVDec(vd, v); :}
+					| {: return new VDeclarationsExpression(); :}
 					;
 
 commands    
@@ -56,7 +67,7 @@ addition
 					= value.v PLUS ZERO			{: return v; :}
 					| ZERO PLUS value.v			{: return v; :}
 					| value.v1 PLUS value.v2	{: return new AdditionExpression(v1, v2); :}
-					| value.v1 PLUS ONE			{: return new AdditionExpression(v1, new NumberValueExpression(BigInteger.ONE)); :}
+					| value.v1 PLUS ONE			{: return new AdditionExpression(new NumberValueExpression(BigInteger.ONE), v1); :}
 					| ONE PLUS value.v2			{: return new AdditionExpression(new NumberValueExpression(BigInteger.ONE), v2); :}
 					;
 
@@ -64,6 +75,8 @@ subtraction
 					= value.v MINUS ZERO		{: return v; :}
 					| ZERO MINUS value			{: return new NumberValueExpression(BigInteger.ZERO); :}
 					| value.v1 MINUS value.v2	{: return new SubtractionExpression(v1, v2); :}
+					| ONE MINUS value.v			{: return new SubtractionExpression(new NumberValueExpression(BigInteger.ONE), v); :}
+					| value.v MINUS ONE			{: return new SubtractionExpression(v, new NumberValueExpression(BigInteger.ONE)); :}
 					;
 
 multiplication
@@ -83,7 +96,7 @@ division
 				
 modulo
 					= value MOD ZERO			{: return new NumberValueExpression(BigInteger.ZERO); :}
-					| value.v MOD ONE			{: return v; :} 
+					| value MOD ONE				{: return new NumberValueExpression(BigInteger.ZERO); :} 
 					| ZERO MOD value			{: return new NumberValueExpression(BigInteger.ZERO); :}
 					| ONE MOD value				{: return new NumberValueExpression(BigInteger.ONE); :}
 					| value.v1 MOD value.v2		{: return new ModuloExpression(v1, v2); :}
@@ -95,7 +108,9 @@ value
              		;
 
 identifier  
-					= PIDENTIFIER.p 			{: return new VariableValueExpression(VariableInfo.of(p)); :}
+					= PIDENTIFIER.p 									{: return new VariableValueExpression(VariableInfo.of(p)); :}
+					| PIDENTIFIER.p LBRACKET NUMBER.n RBRACKET 			{: return new ArrayValueExpression(VariableInfo.of(p), n); :}
+					| PIDENTIFIER.p1 LBRACKET PIDENTIFIER.p2 RBRACKET 	{: return new ArrayVariableValueExpression(VariableInfo.of(p1), p2); :} 
              		;
 
     
