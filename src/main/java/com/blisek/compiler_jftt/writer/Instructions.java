@@ -26,7 +26,7 @@ public class Instructions {
 	
 	public final static String ZERO_i = "ZERO %s";
 	
-	public final static String JUMP_i = "JUMP %s";
+	public final static String JUMP_i = "JUMP";
 	
 	public final static String JZERO_i_j = "JZERO %s";
 	

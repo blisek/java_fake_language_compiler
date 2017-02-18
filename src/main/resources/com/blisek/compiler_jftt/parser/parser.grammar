@@ -19,6 +19,7 @@
 %typeof NUMBER = "BigInteger";
 %typeof PIDENTIFIER = "String";
 %typeof program, commands, command, expression = "Expression";
+%typeof condition = "ConditionExpression";
 %typeof addition = "Expression";
 %typeof subtraction = "Expression";
 %typeof multiplication = "Expression";
@@ -62,6 +63,14 @@ expression
              		| division
              		| modulo
              		;
+             		
+condition			= value.v1 EQ value.v2
+					| value.v1 NEQ value.v2
+					| value.v1 LT value.v2
+					| value.v1 GT value.v2
+					| value.v1 LE value.v2
+					| value.v1 GE value.v2
+					;
              		
 addition
 					= value.v PLUS ZERO			{: return v; :}
