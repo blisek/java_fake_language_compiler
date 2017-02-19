@@ -1,12 +1,14 @@
 VAR
-	a[3] tmp b
+	a[4] tmp b
 BEGIN
 	READ b;
 	tmp := b % 3;
 	a[0] := 1;
 	a[1] := 2;
 	a[2] := 3;
+	a[3] := 55;
 	b := a[tmp];
 	WRITE tmp;
 	WRITE b;
+	WRITE a[b];
 END

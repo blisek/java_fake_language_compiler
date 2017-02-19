@@ -12,11 +12,11 @@ public abstract class ConditionExpression extends BiExpression {
 	public static final int JUMP_TRUE_INDEX = 0;
 	public static final int JUMP_FALSE_INDEX = 1;
 
-	public ConditionExpression(Expression expr1, Expression expr2) {
+	public ConditionExpression(ValueExpression expr1, ValueExpression expr2) {
 		super(expr1, expr2);
 	}
 
-	public ConditionExpression(int label, Expression expr1, Expression expr2) {
+	public ConditionExpression(int label, ValueExpression expr1, ValueExpression expr2) {
 		super(label, expr1, expr2);
 	}
 
@@ -46,6 +46,18 @@ public abstract class ConditionExpression extends BiExpression {
 		
 		setResultRegisterId(-1);
 		return writer.getNextLineNumber() - startLineNumber;
+	}
+	
+	
+
+	@Override
+	public ValueExpression getFirstExpression() {
+		return (ValueExpression)super.getFirstExpression();
+	}
+
+	@Override
+	public ValueExpression getSecondExpression() {
+		return (ValueExpression)super.getSecondExpression();
 	}
 
 	protected int getRequiredRegistersAmount() { return 0; }

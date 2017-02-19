@@ -3,14 +3,14 @@ VAR
 BEGIN
 	READ n;
 	sum := 0;
-	i := 1;
-	m := n;
+	i := n;
 	
-	WHILE i = 1 DO
-		sum := sum + m;
-		m := m - 1;
-		IF m = 0 THEN
-			i := 0;
+	WHILE i >= 1 DO
+		sum := sum + i;
+		i := i - 1;
+		
+		IF i < 1 THEN
+			WRITE n;
 		ELSE
 			SKIP;
 		ENDIF

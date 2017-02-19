@@ -4,7 +4,7 @@ BEGIN
 	READ b;
 	c := b % 2;
 	a := 5;
-	IF c = 1 THEN
+	IF c <> 1 THEN
 		a := a * b;
 	ELSE
 		a := a / b;

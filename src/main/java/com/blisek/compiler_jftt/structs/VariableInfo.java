@@ -23,6 +23,10 @@ public class VariableInfo {
 		return varInfo;
 	}
 	
+	public static boolean isVariableDeclared(final String name) {
+		return _variables.containsKey(name);
+	}
+	
 	protected VariableInfo(String varName) {
 		this.variableName = varName;
 		this.length = BigInteger.ONE;

@@ -62,5 +62,5 @@ JUMP $jump6
 ZERO $reg1
 ZERO $reg4
 JUMP $jump8
-ZERO $reg4
-INC $reg4
+STORE $reg1
+LOAD $reg4

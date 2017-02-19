@@ -67,11 +67,11 @@ expression
              		;
              		
 condition			= value.v1 EQ value.v2			{: return new EqualsConditionExpression(v1, v2); :}
-					| value.v1 NEQ value.v2			{: return null; :}
-					| value.v1 LT value.v2			{: return null; :}
-					| value.v1 GT value.v2			{: return null; :}
-					| value.v1 LE value.v2			{: return null; :}
-					| value.v1 GE value.v2			{: return null; :}
+					| value.v1 NEQ value.v2			{: return new NotEqualsConditionExpression(v1, v2); :}
+					| value.v1 LT value.v2			{: return new LessThanConditionExpression(v1, v2); :}
+					| value.v1 GT value.v2			{: return new GreaterThanConditionExpression(v1, v2); :}
+					| value.v1 LE value.v2			{: return new LessEqualsConditionExpression(v1, v2); :}
+					| value.v1 GE value.v2			{: return new GreaterEqualsConditionExpression(v1, v2); :}
 					;
              		
 addition

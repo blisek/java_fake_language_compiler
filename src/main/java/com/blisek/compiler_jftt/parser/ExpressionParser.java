@@ -196,7 +196,7 @@ public class ExpressionParser extends Parser {
 					final ValueExpression v1 = (ValueExpression) _symbol_v1.value;
 					final Symbol _symbol_v2 = _symbols[offset + 3];
 					final ValueExpression v2 = (ValueExpression) _symbol_v2.value;
-					 return null;
+					 return new NotEqualsConditionExpression(v1, v2);
 				}
 			},
 			new Action() {	// [20] condition = value.v1 LT value.v2
@@ -205,7 +205,7 @@ public class ExpressionParser extends Parser {
 					final ValueExpression v1 = (ValueExpression) _symbol_v1.value;
 					final Symbol _symbol_v2 = _symbols[offset + 3];
 					final ValueExpression v2 = (ValueExpression) _symbol_v2.value;
-					 return null;
+					 return new LessThanConditionExpression(v1, v2);
 				}
 			},
 			new Action() {	// [21] condition = value.v1 GT value.v2
@@ -214,7 +214,7 @@ public class ExpressionParser extends Parser {
 					final ValueExpression v1 = (ValueExpression) _symbol_v1.value;
 					final Symbol _symbol_v2 = _symbols[offset + 3];
 					final ValueExpression v2 = (ValueExpression) _symbol_v2.value;
-					 return null;
+					 return new GreaterThanConditionExpression(v1, v2);
 				}
 			},
 			new Action() {	// [22] condition = value.v1 LE value.v2
@@ -223,7 +223,7 @@ public class ExpressionParser extends Parser {
 					final ValueExpression v1 = (ValueExpression) _symbol_v1.value;
 					final Symbol _symbol_v2 = _symbols[offset + 3];
 					final ValueExpression v2 = (ValueExpression) _symbol_v2.value;
-					 return null;
+					 return new LessEqualsConditionExpression(v1, v2);
 				}
 			},
 			new Action() {	// [23] condition = value.v1 GE value.v2
@@ -232,7 +232,7 @@ public class ExpressionParser extends Parser {
 					final ValueExpression v1 = (ValueExpression) _symbol_v1.value;
 					final Symbol _symbol_v2 = _symbols[offset + 3];
 					final ValueExpression v2 = (ValueExpression) _symbol_v2.value;
-					 return null;
+					 return new GreaterEqualsConditionExpression(v1, v2);
 				}
 			},
 			new Action() {	// [24] addition = value.v PLUS ZERO

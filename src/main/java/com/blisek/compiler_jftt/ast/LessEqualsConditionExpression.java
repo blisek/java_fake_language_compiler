@@ -10,13 +10,13 @@ import com.blisek.compiler_jftt.structs.RegisterReservationInfo;
 import com.blisek.compiler_jftt.writer.Instructions;
 import com.blisek.compiler_jftt.writer.Writer;
 
-public class EqualsConditionExpression extends ConditionExpression {
+public class LessEqualsConditionExpression extends ConditionExpression {
 
-	public EqualsConditionExpression(ValueExpression expr1, ValueExpression expr2) {
+	public LessEqualsConditionExpression(ValueExpression expr1, ValueExpression expr2) {
 		super(expr1, expr2);
 	}
 
-	public EqualsConditionExpression(int label, ValueExpression expr1, ValueExpression expr2) {
+	public LessEqualsConditionExpression(int label, ValueExpression expr1, ValueExpression expr2) {
 		super(label, expr1, expr2);
 	}
 
@@ -34,12 +34,9 @@ public class EqualsConditionExpression extends ConditionExpression {
 		final Register firstReg = reservedRegisters[0].getRegister(),
 				secondReg = reservedRegisters[1].getRegister();
 		
-		OperationsHelper.storeRegisterValue(ctx, firstReg, allocatedCells[0], BigInteger.ZERO);
-		writer.write(OperationsHelper.genInstruction(Instructions.INC_i, secondReg));
-		writer.write(OperationsHelper.genInstruction(Instructions.SUB_i, secondReg));
-		writer.write(OperationsHelper.genInstruction(Instructions.JZERO_i_j, secondReg), -1, jumpFalse);
-		writer.write(OperationsHelper.genInstruction(Instructions.DEC_i, secondReg));
-		writer.write(OperationsHelper.genInstruction(Instructions.JZERO_i_j, secondReg), -1, jumpTrue);
+		OperationsHelper.storeRegisterValue(ctx, secondReg, allocatedCells[0], BigInteger.ZERO);
+		writer.write(OperationsHelper.genInstruction(Instructions.SUB_i, firstReg));
+		writer.write(OperationsHelper.genInstruction(Instructions.JZERO_i_j, firstReg), -1, jumpTrue);
 		writer.write(Instructions.JUMP_i, -1, jumpFalse);
 	}
 
@@ -52,6 +49,5 @@ public class EqualsConditionExpression extends ConditionExpression {
 	protected int getRequiredMemoryCellsAmount() {
 		return 1;
 	}
-	
-	
+
 }

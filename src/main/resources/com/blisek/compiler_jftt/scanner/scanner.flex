@@ -69,6 +69,11 @@ Identifier = [_a-z]+
 	"]"			{ return newToken(Terminals.RBRACKET); }
 	
 	"="			{ return newToken(Terminals.EQ); }
+	"<>"		{ return newToken(Terminals.NEQ); }
+	">"			{ return newToken(Terminals.GT); }
+	"<"			{ return newToken(Terminals.LT); }
+	"<="		{ return newToken(Terminals.LE); }
+	">="		{ return newToken(Terminals.GE); }
 	
 	"BEGIN"		{ return newToken(Terminals.BEGIN); }
 	"END"		{ return newToken(Terminals.END); }
