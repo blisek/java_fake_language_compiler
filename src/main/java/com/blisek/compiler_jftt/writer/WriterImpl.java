@@ -20,8 +20,12 @@ public class WriterImpl implements Writer {
 	@Override
 	public void write(String phrase, int label, int jumpDestination) {
 		Optional<Integer> line = ctx.getLineForLabel(jumpDestination);
+//		if(phrase.startsWith("JUMP")) {
+//			int x = 1;
+//			x *= 3;
+//		}
 		if(line.isPresent()) {
-			writeCandidates.add(new WriteCandidate(String.format(phrase, line.get())));
+			writeCandidates.add(new WriteCandidate(String.format("%s %s", phrase, line.get())));
 		} 
 		else {
 			writeCandidates.add(new WriteCandidate(phrase, jumpDestination));

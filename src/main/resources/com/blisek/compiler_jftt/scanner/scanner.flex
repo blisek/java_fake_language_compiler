@@ -68,12 +68,21 @@ Identifier = [_a-z]+
 	"["			{ return newToken(Terminals.LBRACKET); }
 	"]"			{ return newToken(Terminals.RBRACKET); }
 	
+	"="			{ return newToken(Terminals.EQ); }
+	
 	"BEGIN"		{ return newToken(Terminals.BEGIN); }
 	"END"		{ return newToken(Terminals.END); }
 	"READ"		{ return newToken(Terminals.READ); }
 	"WRITE"		{ return newToken(Terminals.WRITE); }
 	"SKIP"		{ return newToken(Terminals.SKIP); }
 	"VAR"		{ return newToken(Terminals.VAR); }
+	"IF"		{ return newToken(Terminals.IF); }
+	"THEN"		{ return newToken(Terminals.THEN); }
+	"ELSE"		{ return newToken(Terminals.ELSE); }
+	"ENDIF"		{ return newToken(Terminals.ENDIF); }
+	"WHILE"		{ return newToken(Terminals.WHILE); }
+	"DO"		{ return newToken(Terminals.DO); }
+	"ENDWHILE"	{ return newToken(Terminals.ENDWHILE); }
 }
 
 .|\n            { throw new Scanner.Exception("unexpected character '" + yytext() + "'"); }

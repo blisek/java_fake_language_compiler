@@ -42,10 +42,12 @@ public class ArrayVariableValueExpression extends ValueExpression {
 		MemoryAllocationInfo[] mai = ctx.getMemoryAllocationStrategy().allocateTemporaryMemory();
 		try(Deallocator _memoryDeallocator = Deallocator.of(mai)) {
 			
-			OperationsHelper.loadRegister(ctx, destinationRegister, 
-					indexVar.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
-			OperationsHelper.setRegisterValue(ctx, addressRegister, 
-					variable.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
+//			OperationsHelper.loadRegister(ctx, destinationRegister, 
+//					indexVar.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
+//			OperationsHelper.setRegisterValue(ctx, addressRegister, 
+//					variable.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
+			OperationsHelper.setRegisterValue(ctx, destinationRegister, variable.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
+			OperationsHelper.setRegisterValue(ctx, addressRegister, indexVar.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
 			
 			final Writer writer = ctx.getWriter();
 			writer.write(OperationsHelper.genInstruction(Instructions.ADD_i, destinationRegister));

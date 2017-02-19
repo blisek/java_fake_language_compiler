@@ -1,0 +1,14 @@
+VAR
+	a b c
+BEGIN
+	READ b;
+	c := b % 2;
+	a := 5;
+	IF c = 1 THEN
+		a := a * b;
+	ELSE
+		a := a / b;
+	ENDIF
+	
+	WRITE a;
+END

@@ -30,11 +30,11 @@ public class AssignmentExpression extends BiExpression {
 		final Expression initializationExpr = getSecondExpression();
 		final Expression valueExp = getFirstExpression();
 		
-		if(valueExp instanceof VariableValueExpression)
+		if(valueExp.getClass() == VariableValueExpression.class)
 			variableValueExpressionAssignment(ctx, (VariableValueExpression)valueExp, initializationExpr);
-		else if(valueExp instanceof ArrayValueExpression)
+		else if(valueExp.getClass() == ArrayValueExpression.class)
 			arrayValueExpressionAssignment(ctx, (ArrayValueExpression)valueExp, initializationExpr);
-		else if(valueExp instanceof ArrayVariableValueExpression)
+		else if(valueExp.getClass() == ArrayVariableValueExpression.class)
 			arrayVariableValueExpressionAssignment(ctx, (ArrayVariableValueExpression)valueExp, initializationExpr);
 		else 
 			throw new RuntimeException("Invalid variable reference!");
@@ -121,14 +121,16 @@ public class AssignmentExpression extends BiExpression {
 		final MemoryAllocationInfo[] memory = new MemoryAllocationInfo[] {
 				// niepotrzebny jest ciągły blok pamięci więc pojedyncze
 				// komórki są rezerwowane osobno
-				ctx.getMemoryAllocationStrategy().allocateTemporaryMemory()[0],
 				ctx.getMemoryAllocationStrategy().allocateTemporaryMemory()[0]
+				, ctx.getMemoryAllocationStrategy().allocateTemporaryMemory()[0]
 		};
 		
 		try(Deallocator _memoryDeallocator = Deallocator.of(memory)) {
 			OperationsHelper.storeRegisterValue(ctx, resultRegister, memory[0], BigInteger.ZERO);
-			OperationsHelper.loadRegister(ctx, resultRegister, indexVar.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
-			OperationsHelper.setRegisterValue(ctx, ctx.getHelperRegister(), variable.getAssignedMemoryCells()[0].getStartCell());
+//			OperationsHelper.loadRegister(ctx, resultRegister, indexVar.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
+//			OperationsHelper.setRegisterValue(ctx, ctx.getHelperRegister(), variable.getAssignedMemoryCells()[0].getStartCell());
+			OperationsHelper.setRegisterValue(ctx, resultRegister, variable.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
+			OperationsHelper.setRegisterValue(ctx, ctx.getHelperRegister(), indexVar.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
 			final Writer writer = ctx.getWriter();
 			writer.write(OperationsHelper.genInstruction(Instructions.ADD_i, resultRegister));
 			OperationsHelper.storeRegisterValue(ctx, resultRegister, memory[1], BigInteger.ZERO);

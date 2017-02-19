@@ -1,0 +1,20 @@
+VAR
+	sum n i m
+BEGIN
+	READ n;
+	sum := 0;
+	i := 1;
+	m := n;
+	
+	WHILE i = 1 DO
+		sum := sum + m;
+		m := m - 1;
+		IF m = 0 THEN
+			i := 0;
+		ELSE
+			SKIP;
+		ENDIF
+	ENDWHILE
+	
+	WRITE sum;
+END

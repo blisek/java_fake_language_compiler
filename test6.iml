@@ -1,0 +1,12 @@
+VAR
+	a[3] tmp b
+BEGIN
+	READ b;
+	tmp := b % 3;
+	a[0] := 1;
+	a[1] := 2;
+	a[2] := 3;
+	b := a[tmp];
+	WRITE tmp;
+	WRITE b;
+END
