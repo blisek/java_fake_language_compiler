@@ -52,6 +52,8 @@ command
 					= identifier.i ASSIGN expression.e SEMIC {: return new AssignmentExpression(i, e); :}
 					| IF condition.c THEN commands.cs1 ELSE commands.cs2 ENDIF {: return new IfExpression(c, cs1, cs2); :}
 					| WHILE condition.c DO commands.cs ENDWHILE {: return new WhileExpression(c, cs); :}
+					| FOR PIDENTIFIER.p FROM value.v1 TO value.v2 DO commands.c ENDFOR {: return new ForFromToExpression(p, v1, v2, c); :}
+					| FOR PIDENTIFIER.p FROM value.v1 DOWNTO value.v2 DO commands.c ENDFOR {: return new ForFromDownToExpression(p, v1, v2, c); :}
              		| READ identifier.i SEMIC {: return new ReadExpression(i); :}
              		| WRITE value.v SEMIC {: return new WriteExpression(v); :}
              		| SKIP SEMIC {: return new SkipExpression(); :}

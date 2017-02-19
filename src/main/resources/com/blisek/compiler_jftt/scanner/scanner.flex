@@ -88,6 +88,11 @@ Identifier = [_a-z]+
 	"WHILE"		{ return newToken(Terminals.WHILE); }
 	"DO"		{ return newToken(Terminals.DO); }
 	"ENDWHILE"	{ return newToken(Terminals.ENDWHILE); }
+	"FOR"		{ return newToken(Terminals.FOR); }
+	"FROM"		{ return newToken(Terminals.FROM); }
+	"TO"		{ return newToken(Terminals.TO); }
+	"ENDFOR"	{ return newToken(Terminals.ENDFOR); }
+	"DOWNTO"	{ return newToken(Terminals.DOWNTO); }
 }
 
 .|\n            { throw new Scanner.Exception("unexpected character '" + yytext() + "'"); }

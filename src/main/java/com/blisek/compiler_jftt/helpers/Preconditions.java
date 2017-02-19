@@ -2,6 +2,7 @@ package com.blisek.compiler_jftt.helpers;
 
 import java.math.BigInteger;
 
+import com.blisek.compiler_jftt.exceptions.GlobalVariableConcealedByLocalVariableCompilationException;
 import com.blisek.compiler_jftt.exceptions.IndexOutOfRangeCompilationException;
 import com.blisek.compiler_jftt.exceptions.InvalidUseOfVariableCompilationException;
 import com.blisek.compiler_jftt.exceptions.ReadonlyVariableOverwriteAttemptCompilationException;
@@ -67,6 +68,15 @@ public final class Preconditions {
 			String startPos = String.format("%d,%d", startLine, startColumn);
 			String endPos = String.format("%d,%d", endLine, endColumn);
 			throw new UsedUninitialisedVariableCompilationException(String.format(msg, startPos, endPos, variable.getVariableName()));
+		}
+	}
+	
+	public static void assureVariableIsNotDeclared(String varName, int startLine, int startColumn, int endLine, int endColumn) {
+		if(VariableInfo.isVariableDeclared(varName)) {
+			String msg = "[%s-%s] Variable %s used as counter is already declared in global scope.";
+			String startPos = String.format("%d,%d", startLine, startColumn);
+			String endPos = String.format("%d,%d", endLine, endColumn);
+			throw new GlobalVariableConcealedByLocalVariableCompilationException(String.format(msg, startPos, endPos, varName));
 		}
 	}
 }

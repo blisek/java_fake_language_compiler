@@ -14,7 +14,7 @@ public class VariableInfo {
 	private boolean valueAssigned;
 	private boolean readonly;
 	
-	public static VariableInfo of(String name) {
+	public static VariableInfo of(final String name) {
 		VariableInfo varInfo = _variables.get(name);
 		if(varInfo == null) {
 			varInfo = new VariableInfo(name);
@@ -27,7 +27,22 @@ public class VariableInfo {
 		return _variables.containsKey(name);
 	}
 	
-	protected VariableInfo(String varName) {
+	public static boolean registerVariable(final VariableInfo variable) {
+		VariableInfo varInfo = _variables.get(variable.getVariableName());
+		if(varInfo == null) {
+			varInfo = variable;
+			_variables.put(variable.getVariableName(), varInfo);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public static boolean unregisterVariable(VariableInfo variable) {
+		return _variables.remove(variable.getVariableName()) != null;
+	}
+	
+	public VariableInfo(String varName) {
 		this.variableName = varName;
 		this.length = BigInteger.ONE;
 	}

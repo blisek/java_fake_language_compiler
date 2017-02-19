@@ -4,23 +4,25 @@
 	program: ACCEPT
 2:	vdeclarations: SHIFT; goto 3
 	[any]: REDUCE vdeclarations = 
-3:	PIDENTIFIER: SHIFT; goto 106
+3:	PIDENTIFIER: SHIFT; goto 120
 	BEGIN: SHIFT; goto 4
 4:	PIDENTIFIER: SHIFT; goto 19
+	FOR: SHIFT; goto 84
 	IF: SHIFT; goto 72
 	WHILE: SHIFT; goto 79
-	READ: SHIFT; goto 84
-	WRITE: SHIFT; goto 87
-	SKIP: SHIFT; goto 90
+	READ: SHIFT; goto 93
+	WRITE: SHIFT; goto 96
+	SKIP: SHIFT; goto 99
 	identifier: SHIFT; goto 8
-	command: SHIFT; goto 92
+	command: SHIFT; goto 101
 	commands: SHIFT; goto 5
 5:	PIDENTIFIER: SHIFT; goto 19
+	FOR: SHIFT; goto 84
 	IF: SHIFT; goto 72
 	WHILE: SHIFT; goto 79
-	READ: SHIFT; goto 84
-	WRITE: SHIFT; goto 87
-	SKIP: SHIFT; goto 90
+	READ: SHIFT; goto 93
+	WRITE: SHIFT; goto 96
+	SKIP: SHIFT; goto 99
 	END: SHIFT; goto 6
 	identifier: SHIFT; goto 8
 	command: SHIFT; goto 7
@@ -194,42 +196,46 @@
 	ZERO: SHIFT; goto 53
 	ONE: SHIFT; goto 54
 	identifier: SHIFT; goto 18
-	value: SHIFT; goto 93
+	value: SHIFT; goto 107
 	condition: SHIFT; goto 73
 73:	THEN: SHIFT; goto 74
 74:	PIDENTIFIER: SHIFT; goto 19
+	FOR: SHIFT; goto 84
 	IF: SHIFT; goto 72
 	WHILE: SHIFT; goto 79
-	READ: SHIFT; goto 84
-	WRITE: SHIFT; goto 87
-	SKIP: SHIFT; goto 90
+	READ: SHIFT; goto 93
+	WRITE: SHIFT; goto 96
+	SKIP: SHIFT; goto 99
 	identifier: SHIFT; goto 8
-	command: SHIFT; goto 92
+	command: SHIFT; goto 101
 	commands: SHIFT; goto 75
 75:	PIDENTIFIER: SHIFT; goto 19
+	FOR: SHIFT; goto 84
 	IF: SHIFT; goto 72
 	WHILE: SHIFT; goto 79
-	READ: SHIFT; goto 84
-	WRITE: SHIFT; goto 87
-	SKIP: SHIFT; goto 90
+	READ: SHIFT; goto 93
+	WRITE: SHIFT; goto 96
+	SKIP: SHIFT; goto 99
 	ELSE: SHIFT; goto 76
 	identifier: SHIFT; goto 8
 	command: SHIFT; goto 7
 76:	PIDENTIFIER: SHIFT; goto 19
+	FOR: SHIFT; goto 84
 	IF: SHIFT; goto 72
 	WHILE: SHIFT; goto 79
-	READ: SHIFT; goto 84
-	WRITE: SHIFT; goto 87
-	SKIP: SHIFT; goto 90
+	READ: SHIFT; goto 93
+	WRITE: SHIFT; goto 96
+	SKIP: SHIFT; goto 99
 	identifier: SHIFT; goto 8
-	command: SHIFT; goto 92
+	command: SHIFT; goto 101
 	commands: SHIFT; goto 77
 77:	PIDENTIFIER: SHIFT; goto 19
+	FOR: SHIFT; goto 84
 	IF: SHIFT; goto 72
 	WHILE: SHIFT; goto 79
-	READ: SHIFT; goto 84
-	WRITE: SHIFT; goto 87
-	SKIP: SHIFT; goto 90
+	READ: SHIFT; goto 93
+	WRITE: SHIFT; goto 96
+	SKIP: SHIFT; goto 99
 	ENDIF: SHIFT; goto 78
 	identifier: SHIFT; goto 8
 	command: SHIFT; goto 7
@@ -239,93 +245,161 @@
 	ZERO: SHIFT; goto 53
 	ONE: SHIFT; goto 54
 	identifier: SHIFT; goto 18
-	value: SHIFT; goto 93
+	value: SHIFT; goto 107
 	condition: SHIFT; goto 80
 80:	DO: SHIFT; goto 81
 81:	PIDENTIFIER: SHIFT; goto 19
+	FOR: SHIFT; goto 84
 	IF: SHIFT; goto 72
 	WHILE: SHIFT; goto 79
-	READ: SHIFT; goto 84
-	WRITE: SHIFT; goto 87
-	SKIP: SHIFT; goto 90
+	READ: SHIFT; goto 93
+	WRITE: SHIFT; goto 96
+	SKIP: SHIFT; goto 99
 	identifier: SHIFT; goto 8
-	command: SHIFT; goto 92
+	command: SHIFT; goto 101
 	commands: SHIFT; goto 82
 82:	PIDENTIFIER: SHIFT; goto 19
+	FOR: SHIFT; goto 84
 	IF: SHIFT; goto 72
 	WHILE: SHIFT; goto 79
-	READ: SHIFT; goto 84
-	WRITE: SHIFT; goto 87
-	SKIP: SHIFT; goto 90
+	READ: SHIFT; goto 93
+	WRITE: SHIFT; goto 96
+	SKIP: SHIFT; goto 99
 	ENDWHILE: SHIFT; goto 83
 	identifier: SHIFT; goto 8
 	command: SHIFT; goto 7
 83:	[any]: REDUCE command = WHILE condition.c DO commands.cs ENDWHILE
-84:	PIDENTIFIER: SHIFT; goto 19
-	identifier: SHIFT; goto 85
-85:	SEMIC: SHIFT; goto 86
-86:	[any]: REDUCE command = READ identifier.i SEMIC
-87:	PIDENTIFIER: SHIFT; goto 19
+84:	PIDENTIFIER: SHIFT; goto 85
+85:	FROM: SHIFT; goto 86
+86:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
 	ZERO: SHIFT; goto 53
 	ONE: SHIFT; goto 54
 	identifier: SHIFT; goto 18
-	value: SHIFT; goto 88
-88:	SEMIC: SHIFT; goto 89
-89:	[any]: REDUCE command = WRITE value.v SEMIC
-90:	SEMIC: SHIFT; goto 91
-91:	[any]: REDUCE command = SKIP SEMIC
-92:	[any]: REDUCE commands = command.c
-93:	EQ: SHIFT; goto 94
-	NEQ: SHIFT; goto 96
-	LT: SHIFT; goto 98
-	GT: SHIFT; goto 100
-	LE: SHIFT; goto 102
-	GE: SHIFT; goto 104
-94:	PIDENTIFIER: SHIFT; goto 19
+	value: SHIFT; goto 87
+87:	TO: SHIFT; goto 88
+	DOWNTO: SHIFT; goto 102
+88:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
 	ZERO: SHIFT; goto 53
 	ONE: SHIFT; goto 54
 	identifier: SHIFT; goto 18
-	value: SHIFT; goto 95
-95:	[any]: REDUCE condition = value.v1 EQ value.v2
+	value: SHIFT; goto 89
+89:	DO: SHIFT; goto 90
+90:	PIDENTIFIER: SHIFT; goto 19
+	FOR: SHIFT; goto 84
+	IF: SHIFT; goto 72
+	WHILE: SHIFT; goto 79
+	READ: SHIFT; goto 93
+	WRITE: SHIFT; goto 96
+	SKIP: SHIFT; goto 99
+	identifier: SHIFT; goto 8
+	command: SHIFT; goto 101
+	commands: SHIFT; goto 91
+91:	PIDENTIFIER: SHIFT; goto 19
+	FOR: SHIFT; goto 84
+	IF: SHIFT; goto 72
+	WHILE: SHIFT; goto 79
+	READ: SHIFT; goto 93
+	WRITE: SHIFT; goto 96
+	SKIP: SHIFT; goto 99
+	ENDFOR: SHIFT; goto 92
+	identifier: SHIFT; goto 8
+	command: SHIFT; goto 7
+92:	[any]: REDUCE command = FOR PIDENTIFIER.p FROM value.v1 TO value.v2 DO commands.c ENDFOR
+93:	PIDENTIFIER: SHIFT; goto 19
+	identifier: SHIFT; goto 94
+94:	SEMIC: SHIFT; goto 95
+95:	[any]: REDUCE command = READ identifier.i SEMIC
 96:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
 	ZERO: SHIFT; goto 53
 	ONE: SHIFT; goto 54
 	identifier: SHIFT; goto 18
 	value: SHIFT; goto 97
-97:	[any]: REDUCE condition = value.v1 NEQ value.v2
-98:	PIDENTIFIER: SHIFT; goto 19
-	NUMBER: SHIFT; goto 17
-	ZERO: SHIFT; goto 53
-	ONE: SHIFT; goto 54
-	identifier: SHIFT; goto 18
-	value: SHIFT; goto 99
-99:	[any]: REDUCE condition = value.v1 LT value.v2
-100:	PIDENTIFIER: SHIFT; goto 19
-	NUMBER: SHIFT; goto 17
-	ZERO: SHIFT; goto 53
-	ONE: SHIFT; goto 54
-	identifier: SHIFT; goto 18
-	value: SHIFT; goto 101
-101:	[any]: REDUCE condition = value.v1 GT value.v2
+97:	SEMIC: SHIFT; goto 98
+98:	[any]: REDUCE command = WRITE value.v SEMIC
+99:	SEMIC: SHIFT; goto 100
+100:	[any]: REDUCE command = SKIP SEMIC
+101:	[any]: REDUCE commands = command.c
 102:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
 	ZERO: SHIFT; goto 53
 	ONE: SHIFT; goto 54
 	identifier: SHIFT; goto 18
 	value: SHIFT; goto 103
-103:	[any]: REDUCE condition = value.v1 LE value.v2
+103:	DO: SHIFT; goto 104
 104:	PIDENTIFIER: SHIFT; goto 19
+	FOR: SHIFT; goto 84
+	IF: SHIFT; goto 72
+	WHILE: SHIFT; goto 79
+	READ: SHIFT; goto 93
+	WRITE: SHIFT; goto 96
+	SKIP: SHIFT; goto 99
+	identifier: SHIFT; goto 8
+	command: SHIFT; goto 101
+	commands: SHIFT; goto 105
+105:	PIDENTIFIER: SHIFT; goto 19
+	FOR: SHIFT; goto 84
+	IF: SHIFT; goto 72
+	WHILE: SHIFT; goto 79
+	READ: SHIFT; goto 93
+	WRITE: SHIFT; goto 96
+	SKIP: SHIFT; goto 99
+	ENDFOR: SHIFT; goto 106
+	identifier: SHIFT; goto 8
+	command: SHIFT; goto 7
+106:	[any]: REDUCE command = FOR PIDENTIFIER.p FROM value.v1 DOWNTO value.v2 DO commands.c ENDFOR
+107:	EQ: SHIFT; goto 108
+	NEQ: SHIFT; goto 110
+	LT: SHIFT; goto 112
+	GT: SHIFT; goto 114
+	LE: SHIFT; goto 116
+	GE: SHIFT; goto 118
+108:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
 	ZERO: SHIFT; goto 53
 	ONE: SHIFT; goto 54
 	identifier: SHIFT; goto 18
-	value: SHIFT; goto 105
-105:	[any]: REDUCE condition = value.v1 GE value.v2
-106:	LBRACKET: SHIFT; goto 107
+	value: SHIFT; goto 109
+109:	[any]: REDUCE condition = value.v1 EQ value.v2
+110:	PIDENTIFIER: SHIFT; goto 19
+	NUMBER: SHIFT; goto 17
+	ZERO: SHIFT; goto 53
+	ONE: SHIFT; goto 54
+	identifier: SHIFT; goto 18
+	value: SHIFT; goto 111
+111:	[any]: REDUCE condition = value.v1 NEQ value.v2
+112:	PIDENTIFIER: SHIFT; goto 19
+	NUMBER: SHIFT; goto 17
+	ZERO: SHIFT; goto 53
+	ONE: SHIFT; goto 54
+	identifier: SHIFT; goto 18
+	value: SHIFT; goto 113
+113:	[any]: REDUCE condition = value.v1 LT value.v2
+114:	PIDENTIFIER: SHIFT; goto 19
+	NUMBER: SHIFT; goto 17
+	ZERO: SHIFT; goto 53
+	ONE: SHIFT; goto 54
+	identifier: SHIFT; goto 18
+	value: SHIFT; goto 115
+115:	[any]: REDUCE condition = value.v1 GT value.v2
+116:	PIDENTIFIER: SHIFT; goto 19
+	NUMBER: SHIFT; goto 17
+	ZERO: SHIFT; goto 53
+	ONE: SHIFT; goto 54
+	identifier: SHIFT; goto 18
+	value: SHIFT; goto 117
+117:	[any]: REDUCE condition = value.v1 LE value.v2
+118:	PIDENTIFIER: SHIFT; goto 19
+	NUMBER: SHIFT; goto 17
+	ZERO: SHIFT; goto 53
+	ONE: SHIFT; goto 54
+	identifier: SHIFT; goto 18
+	value: SHIFT; goto 119
+119:	[any]: REDUCE condition = value.v1 GE value.v2
+120:	LBRACKET: SHIFT; goto 121
 	[any]: REDUCE vdeclarations = vdeclarations.v PIDENTIFIER.p
-107:	NUMBER: SHIFT; goto 108
-108:	RBRACKET: SHIFT; goto 109
-109:	[any]: REDUCE vdeclarations = vdeclarations.v PIDENTIFIER.p LBRACKET NUMBER.n RBRACKET
+121:	NUMBER: SHIFT; goto 122
+122:	RBRACKET: SHIFT; goto 123
+123:	[any]: REDUCE vdeclarations = vdeclarations.v PIDENTIFIER.p LBRACKET NUMBER.n RBRACKET
