@@ -39,16 +39,17 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 
 Number = [1-9][:digit:]*
 OnlyZero = [0]
-Comment = [\{].*[\}]
 
 Identifier = [_a-z]+
+
+%state COMMENT
 
 %%
 
 {WhiteSpace}+   { /* ignore */ }
 
 <YYINITIAL> {
-	{Comment}	{}
+	"{"			{ yybegin(COMMENT); }
 	{Number}    {
 					final String yyt = yytext();
 					if("1".equals(yyt)) return newToken(Terminals.ONE, BigInteger.ONE);
@@ -95,4 +96,9 @@ Identifier = [_a-z]+
 	"DOWNTO"	{ return newToken(Terminals.DOWNTO); }
 }
 
-.|\n            { throw new Scanner.Exception("unexpected character '" + yytext() + "'"); }
+<COMMENT> {
+	"}"			{ yybegin(YYINITIAL); }
+	[^]			{}
+}
+
+.|\n            { throw new Scanner.Exception("Wykryto nieznany symbol '" + yytext() + "'"); }

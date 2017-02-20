@@ -1,5 +1,4 @@
-{ errorf2.imp - uzycie zmiennej globalnej 
-  o tej samej nazwie co iterator w zakresie petli }
+{ errorf2.imp - uzycie zmiennej globalnej o tej samej nazwie co iterator w zakresie petli }
 VAR
 	c i
 BEGIN
@@ -12,4 +11,3 @@ BEGIN
 	WRITE c;
 
 END
-
