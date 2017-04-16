@@ -24,7 +24,7 @@ public class Compiler {
 		for(String arg : args) {
 			System.out.println("Argument: " + arg);
 		}
-		new MultiplyExpression(null, null);
+		//new MultiplyExpression(null, null);
 		if(!parseArguments(args)) {
 			printHelp();
 			return;
@@ -36,7 +36,6 @@ public class Compiler {
 		catch(beaver.Parser.Exception | CompilationException e) {
 			System.err.print("Compile error: ");
 			System.err.println(e.getMessage());
-//			e.printStackTrace();
 		}
 		catch(IOException ioe) {
 			System.err.println("IO error while reading/writing file: ");
