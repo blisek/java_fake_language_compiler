@@ -26,6 +26,15 @@ public class ArrayValueExpression extends ValueExpression {
 	}
 
 	@Override
+	public ValueExpression createWorkingCopy(Context ctx) {
+		VariableInfo vi = OperationsHelper.cloneVariableInfoCell(ctx, getVariable(), getIndex());
+        vi.setVariableDeclared(true);
+        vi.setValueAssigned(true);
+//		return new ArrayValueExpression(getLabel(), vi, BigInteger.ZERO);
+        return new VariableValueExpression(vi, BigInteger.ZERO);
+	}
+
+	@Override
 	protected void loadValueIntoRegister(Context ctx, Register addressRegister, Register destinationRegister) {
 		Preconditions.assureNoArrayType(variable, getLine(start), getColumn(start), getLine(end), getColumn(end), true);
 		Preconditions.assureVariableIsDeclared(variable, getLine(start), getColumn(start), getLine(end),

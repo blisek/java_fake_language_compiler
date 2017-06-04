@@ -12,12 +12,11 @@ import com.blisek.compiler_jftt.structs.VariableInfo;
 
 public class VariableValueExpression extends ValueExpression {
 	private VariableInfo variable;
-	private BigInteger index;
+	private BigInteger index = BigInteger.ZERO;
 
 	public VariableValueExpression(VariableInfo var) {
 		super(null);
 		this.variable = var;
-		this.index = BigInteger.ZERO;
 	}
 
 	public VariableValueExpression(int label, VariableInfo var) {
@@ -33,6 +32,14 @@ public class VariableValueExpression extends ValueExpression {
 	public VariableValueExpression(int label, VariableInfo var, BigInteger index) {
 		this(label, var);
 		this.index = index;
+	}
+
+	@Override
+	public VariableValueExpression createWorkingCopy(Context ctx) {
+        VariableInfo viCopy = OperationsHelper.cloneVariableInfoCell(ctx, variable, index);
+        viCopy.setVariableDeclared(true);
+        viCopy.setValueAssigned(true);
+		return new VariableValueExpression(getLabel(), viCopy, index);
 	}
 
 	@Override

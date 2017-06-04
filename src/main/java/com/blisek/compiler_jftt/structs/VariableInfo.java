@@ -2,10 +2,13 @@ package com.blisek.compiler_jftt.structs;
 
 import java.math.BigInteger;
 import java.util.Map;
+import java.util.Random;
 import java.util.TreeMap;
 
 public class VariableInfo {
+    private static final String WORKING_COPY_TEMPLATE = "%s_copy_%d";
 	private static final Map<String, VariableInfo> _variables = new TreeMap<>();
+	private static final Random randomSuffixGenerator = new Random();
 	private final String variableName;
 	private MemoryAllocationInfo[] assignedMemoryCells;
 	private BigInteger value;
@@ -13,6 +16,7 @@ public class VariableInfo {
 	private boolean variableDeclared;
 	private boolean valueAssigned;
 	private boolean readonly;
+    private VariableInfo origin;
 	
 	public static VariableInfo of(final String name) {
 		VariableInfo varInfo = _variables.get(name);
@@ -46,6 +50,15 @@ public class VariableInfo {
 		this.variableName = varName;
 		this.length = BigInteger.ONE;
 	}
+
+	public VariableInfo createWorkingCopy() {
+        String newName;
+        while (isVariableDeclared(newName = generateWorkingCopyName(variableName)))
+            ;
+        VariableInfo vi = of(newName);
+        vi.setOrigin(this);
+        return vi;
+    }
 	
 	public MemoryAllocationInfo[] getAssignedMemoryCells() {
 		return assignedMemoryCells;
@@ -98,5 +111,16 @@ public class VariableInfo {
 	public void setReadonly(boolean readonly) {
 		this.readonly = readonly;
 	}
-	
+
+    public VariableInfo getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(VariableInfo origin) {
+        this.origin = origin;
+    }
+
+    private static String generateWorkingCopyName(final String varName) {
+        return String.format(WORKING_COPY_TEMPLATE, varName, randomSuffixGenerator.nextInt());
+    }
 }

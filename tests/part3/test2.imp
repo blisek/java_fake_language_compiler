@@ -1,0 +1,12 @@
+VAR
+  a[3] b c
+BEGIN
+  READ a[0];
+  READ a[1];
+  READ b;
+  READ c;
+  c := c + 2;
+  FOR i FROM a[b] TO c DO
+    WRITE i;
+  ENDFOR
+END

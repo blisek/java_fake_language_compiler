@@ -8,6 +8,7 @@ import com.blisek.compiler_jftt.helpers.OperationsHelper;
 import com.blisek.compiler_jftt.helpers.Preconditions;
 import com.blisek.compiler_jftt.structs.Deallocator;
 import com.blisek.compiler_jftt.structs.MemoryAllocationInfo;
+import com.blisek.compiler_jftt.structs.RegisterReservationInfo;
 import com.blisek.compiler_jftt.structs.VariableInfo;
 import com.blisek.compiler_jftt.writer.Instructions;
 import com.blisek.compiler_jftt.writer.Writer;
@@ -41,13 +42,8 @@ public class ArrayVariableValueExpression extends ValueExpression {
 		
 		MemoryAllocationInfo[] mai = ctx.getMemoryAllocationStrategy().allocateTemporaryMemory();
 		try(Deallocator _memoryDeallocator = Deallocator.of(mai)) {
-			
-//			OperationsHelper.loadRegister(ctx, destinationRegister, 
-//					indexVar.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
-//			OperationsHelper.setRegisterValue(ctx, addressRegister, 
-//					variable.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
-			OperationsHelper.setRegisterValue(ctx, destinationRegister, variable.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
-			OperationsHelper.setRegisterValue(ctx, addressRegister, indexVar.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
+            OperationsHelper.setRegisterValue(ctx, destinationRegister, variable.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
+            OperationsHelper.setRegisterValue(ctx, addressRegister, indexVar.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
 			
 			final Writer writer = ctx.getWriter();
 			writer.write(OperationsHelper.genInstruction(Instructions.ADD_i, destinationRegister));
@@ -57,6 +53,29 @@ public class ArrayVariableValueExpression extends ValueExpression {
 		}
 		
 		
+	}
+
+	@Override
+	public ValueExpression createWorkingCopy(Context ctx) {
+		final VariableInfo variable = OperationsHelper.cloneVariableInfoCell(ctx, getVariable(), null);
+
+        RegisterReservationInfo[] rri;
+        try(Deallocator _dealloc = Deallocator.of(rri = OperationsHelper.getRegisters(ctx, 1))) {
+            final Register tempRegister = rri[0].getRegister();
+//            OperationsHelper.setRegisterValue(ctx, tempRegister, variable.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
+//            OperationsHelper.setRegisterValue(ctx, ctx.getHelperRegister(), indexVar.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
+//            final Writer writer = ctx.getWriter();
+//            writer.write(OperationsHelper.genInstruction(Instructions.ADD_i, tempRegister));
+//            writer.write(OperationsHelper.genInstruction(Instructions.COPY_i, tempRegister));
+//            writer.write(OperationsHelper.genInstruction(Instructions.LOAD_i, tempRegister));
+            loadValueIntoRegister(ctx, ctx.getHelperRegister(), tempRegister);
+            OperationsHelper.setRegisterValue(ctx, ctx.getHelperRegister(), variable.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO));
+            ctx.getWriter().write(OperationsHelper.genInstruction(Instructions.STORE_i, tempRegister));
+        }
+//		return new ArrayVariableValueExpression(getLabel(), variable, indexVar.getVariableName());
+        variable.setVariableDeclared(true);
+        variable.setValueAssigned(true);
+        return new VariableValueExpression(variable);
 	}
 
 	public VariableInfo getVariable() {

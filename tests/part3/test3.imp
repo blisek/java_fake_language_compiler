@@ -1,0 +1,15 @@
+VAR
+  a[3] b c
+BEGIN
+  READ a[0];
+  READ a[1];
+  READ a[2];
+  READ b;
+  b := b % 3;
+  READ c;
+  FOR i FROM c TO a[b] DO
+    a[b] := a[b] - 1;
+    WRITE a[b];
+    WRITE i;
+  ENDFOR
+END

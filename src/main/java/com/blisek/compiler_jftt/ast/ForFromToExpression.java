@@ -41,6 +41,7 @@ public class ForFromToExpression extends SingleExpression {
 //		Preconditions.assureVariableIsNotDeclared(variableName, startLine, startColumn, endLine, endColumn);
 		VariableInfo localVariable = setUpLocalVariable(ctx);
 		RegisterReservationInfo[] reservedRegisters = OperationsHelper.getRegisters(ctx, 1);
+		ValueExpression toValueCopy = toVe.createWorkingCopy(ctx);
 
 		try (Deallocator _registersDeallocator = Deallocator.of(reservedRegisters)) {
 			ctx.increaseLevel();
@@ -53,7 +54,7 @@ public class ForFromToExpression extends SingleExpression {
 			writer.write(OperationsHelper.genInstruction(Instructions.STORE_i, reservedRegister));
 			localVariable.setValueAssigned(true);
 
-			new WhileExpression(new LessEqualsConditionExpression(new VariableValueExpression(localVariable), toVe),
+			new WhileExpression(new LessEqualsConditionExpression(new VariableValueExpression(localVariable), toValueCopy),
 					new Expression(getExpression(), new CounterIncreaserExpression(localVariable, reservedRegister)))
 							.write(ctx, null);
 		}

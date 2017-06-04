@@ -41,6 +41,7 @@ public class ForFromDownToExpression extends SingleExpression {
 //		Preconditions.assureVariableIsNotDeclared(variableName, startLine, startColumn, endLine, endColumn);
 		VariableInfo localVariable = setUpLocalVariable(ctx);
 		RegisterReservationInfo[] reservedRegisters = OperationsHelper.getRegisters(ctx, 1);
+        ValueExpression toValueCopy = toVe.createWorkingCopy(ctx);
 
 		try (Deallocator _registersDeallocator = Deallocator.of(reservedRegisters)) {
 			ctx.increaseLevel();

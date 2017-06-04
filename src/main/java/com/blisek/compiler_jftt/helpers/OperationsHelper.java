@@ -69,6 +69,29 @@ public class OperationsHelper {
 		return regResInfo;
 	}
 
+	public static VariableInfo cloneVariableInfoCell(final Context ctx, final VariableInfo source, final BigInteger index) {
+		VariableInfo cloned = source.createWorkingCopy();
+        cloned.setLength(BigInteger.ONE);
+		allocateMemoryForVariableIfNotDoneYet(ctx, cloned);
+
+		if(!source.isValueAssigned() || index == null)
+			return cloned;
+
+		RegisterReservationInfo[] rri;
+		try(Deallocator _deallocator = Deallocator.of(rri = getRegisters(ctx, 1))) {
+			BigInteger cellAddress = source.getAssignedMemoryCells()[0].getCellAddress(index);
+			final Register workingRegister = rri[0].getRegister();
+			loadRegister(ctx, workingRegister, cellAddress);
+
+			cellAddress = cloned.getAssignedMemoryCells()[0].getCellAddress(BigInteger.ZERO);
+			setRegisterValue(ctx, ctx.getHelperRegister(), cellAddress);
+			ctx.getWriter().write(OperationsHelper.genInstruction(Instructions.STORE_i, workingRegister));
+			cloned.setValueAssigned(true);
+		}
+
+		return cloned;
+	}
+
 	public static void freeRegister(Register reg) {
 		reg.setTaken(false);
 		reg.setUsedByLevel(-1);

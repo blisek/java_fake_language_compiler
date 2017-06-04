@@ -20,6 +20,12 @@ public class NumberValueExpression extends ValueExpression {
 	}
 
 	@Override
+	public NumberValueExpression createWorkingCopy(Context ctx) {
+		return new NumberValueExpression(getLabel(), number);
+//		return this;
+	}
+
+	@Override
 	protected void loadValueIntoRegister(Context ctx, Register addressRegister, Register destinationRegister) {
 		OperationsHelper.setRegisterValue(ctx, destinationRegister, number);
 	}
