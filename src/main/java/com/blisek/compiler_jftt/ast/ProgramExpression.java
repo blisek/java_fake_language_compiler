@@ -27,6 +27,7 @@ public class ProgramExpression extends SingleExpression {
 
 	private void markDeclaredVariables() {
 		for(VDeclaration vd : declarations.getVdeclarations()) {
+			System.out.println("Delaration: " + vd.getVarName());
 			VariableInfo var = VariableInfo.of(vd.getVarName());
 			var.setLength(vd.getLength());
 			var.setVariableDeclared(true);

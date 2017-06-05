@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import com.blisek.compiler_jftt.context.Context;
 import com.blisek.compiler_jftt.context.Register;
 import com.blisek.compiler_jftt.helpers.OperationsHelper;
+import com.blisek.compiler_jftt.helpers.Preconditions;
 import com.blisek.compiler_jftt.structs.Deallocator;
 import com.blisek.compiler_jftt.structs.RegisterReservationInfo;
 import com.blisek.compiler_jftt.structs.VariableInfo;
@@ -19,6 +20,7 @@ public class ForFromDownToExpression extends SingleExpression {
 			Expression expression) {
 		super(expression);
 		this.variableName = variableName;
+        VariableInfo.unregisterVariable(variableName);
 		this.fromVe = fromValue;
 		this.toVe = toValue;
 	}
@@ -27,6 +29,7 @@ public class ForFromDownToExpression extends SingleExpression {
 			Expression expression) {
 		super(label, expression);
 		this.variableName = variableName;
+        VariableInfo.unregisterVariable(variableName);
 		this.fromVe = fromValue;
 		this.toVe = toValue;
 	}
@@ -38,7 +41,7 @@ public class ForFromDownToExpression extends SingleExpression {
 		final int startLineNum = writer.getNextLineNumber();
 		final int startLine = getLine(getStart()), startColumn = getColumn(getStart()), endLine = getLine(getEnd()),
 				endColumn = getColumn(getEnd());
-//		Preconditions.assureVariableIsNotDeclared(variableName, startLine, startColumn, endLine, endColumn);
+		Preconditions.assureVariableIsNotDeclared(variableName, startLine, startColumn, endLine, endColumn);
 		VariableInfo localVariable = setUpLocalVariable(ctx);
 		RegisterReservationInfo[] reservedRegisters = OperationsHelper.getRegisters(ctx, 1);
         ValueExpression toValueCopy = toVe.createWorkingCopy(ctx);
@@ -54,10 +57,14 @@ public class ForFromDownToExpression extends SingleExpression {
 			writer.write(OperationsHelper.genInstruction(Instructions.STORE_i, reservedRegister));
 			localVariable.setValueAssigned(true);
 
-			new WhileExpression(new GreaterThanConditionExpression(new VariableValueExpression(localVariable), toVe),
+            VariableValueExpression localVariableExpression = new VariableValueExpression(localVariable);
+            localVariableExpression.setIgnoreSafetyChecks(true);
+			ctx.increaseLevel();
+			new WhileExpression(new GreaterThanConditionExpression(localVariableExpression, toValueCopy),
 					new Expression(getExpression(), new CounterIncreaserExpression(localVariable, reservedRegister)))
 							.write(ctx, null);
 			getExpression().write(ctx, null);
+			ctx.decreaseLevel();
 		}
 
 		VariableInfo.unregisterVariable(localVariable);

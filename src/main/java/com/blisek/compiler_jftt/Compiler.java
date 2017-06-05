@@ -3,6 +3,7 @@ package com.blisek.compiler_jftt;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
@@ -17,7 +18,8 @@ import com.blisek.compiler_jftt.scanner.Parser;
 
 public class Compiler {
 	private static final Options cliOptions;
-	private static File inputFile, outputFile;
+//	private static File inputFile, outputFile;
+	private static File[] inputFiles, outputFiles;
 	
 
 	public static void main(String[] args) {
@@ -29,21 +31,21 @@ public class Compiler {
 			printHelp();
 			return;
 		}
-		
-		try {
-			Parser.parse(inputFile, outputFile);
-		}
-		catch(beaver.Parser.Exception | CompilationException e) {
-			System.err.print("Compile error: ");
-			System.err.println(e.getMessage());
-		}
-		catch(IOException ioe) {
-			System.err.println("IO error while reading/writing file: ");
-			ioe.printStackTrace();
-		}
-		catch(Exception ex) {
-			System.err.println("Unknown error occurred: ");
-			ex.printStackTrace();
+
+		for(int i = 0; i < inputFiles.length; ++i) {
+			try {
+				Parser.parse(inputFiles[i], outputFiles[i]);
+			} catch (beaver.Parser.Exception | CompilationException e) {
+				System.err.print("Compile error: ");
+				System.err.println(e.getMessage());
+				e.printStackTrace();
+			} catch (IOException ioe) {
+				System.err.println("IO error while reading/writing file: ");
+				ioe.printStackTrace();
+			} catch (Exception ex) {
+				System.err.println("Unknown error occurred: ");
+				ex.printStackTrace();
+			}
 		}
 	}
 	
@@ -67,9 +69,18 @@ public class Compiler {
 		if(outputFileName == null) {
 			return false;
 		}
-		
-		outputFile = new File(outputFileName);
-		return true;
+
+		try {
+			File outputFile = new File(new File(".").getCanonicalFile(), outputFileName);
+			if (inputFiles != null && inputFiles.length > 1)
+				outputFiles = Arrays.stream(inputFiles).map(iFile -> new File(outputFile, iFile.getName() + ".iml"))
+						.toArray(size -> new File[size]);
+			else
+				outputFiles = new File[]{outputFile};
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	private static boolean parseInputFileName(CommandLine cmd) {
@@ -77,13 +88,20 @@ public class Compiler {
 		if(inputFileName == null) {
 			return false;
 		}
-		
-		File inputF = new File(inputFileName);
-		if(!inputF.exists())
+		try {
+
+			File inputF = new File(new File(".").getCanonicalFile(), inputFileName);
+			if (!inputF.exists())
+				return false;
+
+			if (inputF.isDirectory())
+				inputFiles = inputF.listFiles();
+			else
+				inputFiles = new File[]{inputF};
+			return true;
+		} catch (Exception e) {
 			return false;
-		
-		inputFile = inputF;
-		return true;
+		}
 	}
 
 	private static void printHelp() {

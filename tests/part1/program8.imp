@@ -8,10 +8,14 @@ BEGIN
 	FOR i FROM 9 DOWNTO 0 DO
 		FOR j FROM 0 TO i DO
 			FOR k FROM 0 TO j DO
+				{ WRITE i; }
+				{ WRITE j; }
+				{ WRITE k; }
 				a := a + k;
 				c := k * j;
 				c := c + i;
 				b := b + c;
+				{ WRITE 9999999; }
 			ENDFOR
 		ENDFOR
 	ENDFOR
@@ -19,4 +23,3 @@ BEGIN
 	WRITE b;
 	WRITE c;
 END
-

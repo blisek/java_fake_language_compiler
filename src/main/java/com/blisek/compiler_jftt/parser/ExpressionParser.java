@@ -414,9 +414,11 @@ public class ExpressionParser extends Parser {
 					 return new NumberValueExpression(BigInteger.ZERO);
 				}
 			},
-			new Action() {	// [48] modulo = ONE MOD value
+			new Action() {	// [48] modulo = ONE MOD value.v
 				public Symbol reduce(Symbol[] _symbols, int offset) {
-					 return new NumberValueExpression(BigInteger.ONE);
+					final Symbol _symbol_v = _symbols[offset + 3];
+					final ValueExpression v = (ValueExpression) _symbol_v.value;
+					 return new ModuloExpression(new NumberValueExpression(BigInteger.ONE), v);
 				}
 			},
 			new Action() {	// [49] modulo = value.v1 MOD value.v2

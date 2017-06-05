@@ -111,7 +111,7 @@ modulo
 					= value MOD ZERO			{: return new NumberValueExpression(BigInteger.ZERO); :}
 					| value MOD ONE				{: return new NumberValueExpression(BigInteger.ZERO); :} 
 					| ZERO MOD value			{: return new NumberValueExpression(BigInteger.ZERO); :}
-					| ONE MOD value				{: return new NumberValueExpression(BigInteger.ONE); :}
+					| ONE MOD value.v			{: return new ModuloExpression(new NumberValueExpression(BigInteger.ONE), v); :}
 					| value.v1 MOD value.v2		{: return new ModuloExpression(v1, v2); :}
 					;
 

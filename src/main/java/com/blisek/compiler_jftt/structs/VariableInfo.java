@@ -17,24 +17,31 @@ public class VariableInfo {
 	private boolean valueAssigned;
 	private boolean readonly;
     private VariableInfo origin;
+    private boolean registered;
 	
 	public static VariableInfo of(final String name) {
 		VariableInfo varInfo = _variables.get(name);
 		if(varInfo == null) {
 			varInfo = new VariableInfo(name);
+            varInfo.registered = true;
 			_variables.put(name, varInfo);
-		}
+		} else if(!varInfo.registered){
+            varInfo.registered = true;
+        }
 		return varInfo;
 	}
 	
 	public static boolean isVariableDeclared(final String name) {
-		return _variables.containsKey(name);
+		VariableInfo vi = _variables.get(name);
+        return vi != null && vi.registered;
+//        return _variables.containsKey(name);
 	}
 	
 	public static boolean registerVariable(final VariableInfo variable) {
 		VariableInfo varInfo = _variables.get(variable.getVariableName());
 		if(varInfo == null) {
 			varInfo = variable;
+            varInfo.registered = true;
 			_variables.put(variable.getVariableName(), varInfo);
 			return true;
 		} else {
@@ -43,8 +50,19 @@ public class VariableInfo {
 	}
 	
 	public static boolean unregisterVariable(VariableInfo variable) {
-		return _variables.remove(variable.getVariableName()) != null;
+		return unregisterVariable(variable.getVariableName());
 	}
+
+	public static boolean unregisterVariable(String variableName) {
+//        return _variables.remove(variableName) != null;
+        VariableInfo vi = _variables.get(variableName);
+        if(vi != null) {
+            vi.registered = false;
+            return true;
+        }
+
+        return false;
+    }
 	
 	public VariableInfo(String varName) {
 		this.variableName = varName;

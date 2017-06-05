@@ -13,6 +13,7 @@ import com.blisek.compiler_jftt.structs.VariableInfo;
 public class VariableValueExpression extends ValueExpression {
 	private VariableInfo variable;
 	private BigInteger index = BigInteger.ZERO;
+    private boolean ignoreSafetyChecks;
 
 	public VariableValueExpression(VariableInfo var) {
 		super(null);
@@ -36,6 +37,8 @@ public class VariableValueExpression extends ValueExpression {
 
 	@Override
 	public VariableValueExpression createWorkingCopy(Context ctx) {
+		assureValueAssigned();
+		assureVariableDeclared();
         VariableInfo viCopy = OperationsHelper.cloneVariableInfoCell(ctx, variable, index);
         viCopy.setVariableDeclared(true);
         viCopy.setValueAssigned(true);
@@ -46,10 +49,12 @@ public class VariableValueExpression extends ValueExpression {
 	protected void loadValueIntoRegister(Context ctx, Register addressRegister, Register destinationRegister) {
 		BigInteger val = variable.getValue();
 		MemoryAllocationInfo[] mai = variable.getAssignedMemoryCells();
-		
-		// TODO: sprawdzanie czy zmienna została zainicjalizowana
-		assureVariableDeclared();
-		assureValueAssigned();
+
+        if(!ignoreSafetyChecks) {
+            // TODO: sprawdzanie czy zmienna została zainicjalizowana
+            assureVariableDeclared();
+            assureValueAssigned();
+        }
 		
 		BigInteger cellAddress = mai[0].getCellAddress(BigInteger.ZERO);
 		if(val == null) {
@@ -97,4 +102,11 @@ public class VariableValueExpression extends ValueExpression {
 		this.index = index;
 	}
 
+    public boolean isIgnoreSafetyChecks() {
+        return ignoreSafetyChecks;
+    }
+
+    public void setIgnoreSafetyChecks(boolean ignoreSafetyChecks) {
+        this.ignoreSafetyChecks = ignoreSafetyChecks;
+    }
 }

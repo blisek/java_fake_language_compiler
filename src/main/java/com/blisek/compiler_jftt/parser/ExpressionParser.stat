@@ -190,7 +190,7 @@
 	ONE: SHIFT; goto 54
 	identifier: SHIFT; goto 18
 	value: SHIFT; goto 71
-71:	SEMIC: REDUCE modulo = ONE MOD value
+71:	SEMIC: REDUCE modulo = ONE MOD value.v
 72:	PIDENTIFIER: SHIFT; goto 19
 	NUMBER: SHIFT; goto 17
 	ZERO: SHIFT; goto 53

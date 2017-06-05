@@ -30,9 +30,7 @@ public class ArrayVariableValueExpression extends ValueExpression {
 
 	@Override
 	protected void loadValueIntoRegister(Context ctx, Register addressRegister, Register destinationRegister) {
-		Preconditions.assureNoArrayType(variable, getLine(start), getColumn(start), getLine(end), getColumn(end), true);
-		Preconditions.assureVariableIsDeclared(variable, getLine(start), getColumn(start), getLine(end),
-				getColumn(end));
+		checkPreconditions();
 		final BigInteger index = indexVar.getValue();
 		if(index != null) {
 			Preconditions.assureIndexInRange(variable, index, getLine(start), getColumn(start), getLine(end),
@@ -57,6 +55,7 @@ public class ArrayVariableValueExpression extends ValueExpression {
 
 	@Override
 	public ValueExpression createWorkingCopy(Context ctx) {
+		checkPreconditions();
 		final VariableInfo variable = OperationsHelper.cloneVariableInfoCell(ctx, getVariable(), null);
 
         RegisterReservationInfo[] rri;
@@ -84,5 +83,11 @@ public class ArrayVariableValueExpression extends ValueExpression {
 
 	public VariableInfo getIndexVar() {
 		return indexVar;
+	}
+
+	private void checkPreconditions() {
+		Preconditions.assureArrayType(variable, getLine(start), getColumn(start), getLine(end), getColumn(end));
+		Preconditions.assureVariableIsDeclared(variable, getLine(start), getColumn(start), getLine(end),
+				getColumn(end));
 	}
 }

@@ -27,6 +27,7 @@ public class ArrayValueExpression extends ValueExpression {
 
 	@Override
 	public ValueExpression createWorkingCopy(Context ctx) {
+		checkPreconditions();
 		VariableInfo vi = OperationsHelper.cloneVariableInfoCell(ctx, getVariable(), getIndex());
         vi.setVariableDeclared(true);
         vi.setValueAssigned(true);
@@ -36,11 +37,7 @@ public class ArrayValueExpression extends ValueExpression {
 
 	@Override
 	protected void loadValueIntoRegister(Context ctx, Register addressRegister, Register destinationRegister) {
-		Preconditions.assureNoArrayType(variable, getLine(start), getColumn(start), getLine(end), getColumn(end), true);
-		Preconditions.assureVariableIsDeclared(variable, getLine(start), getColumn(start), getLine(end),
-				getColumn(end));
-		Preconditions.assureIndexInRange(variable, index, getLine(start), getColumn(start), getLine(end),
-				getColumn(end));
+		checkPreconditions();
 
 		OperationsHelper.setRegisterValue(ctx, addressRegister,
 				variable.getAssignedMemoryCells()[0].getCellAddress(index));
@@ -64,5 +61,11 @@ public class ArrayValueExpression extends ValueExpression {
 		this.index = index;
 	}
 
-	
+	private void checkPreconditions() {
+		Preconditions.assureNoArrayType(variable, getLine(start), getColumn(start), getLine(end), getColumn(end), true);
+		Preconditions.assureVariableIsDeclared(variable, getLine(start), getColumn(start), getLine(end),
+				getColumn(end));
+		Preconditions.assureIndexInRange(variable, index, getLine(start), getColumn(start), getLine(end),
+				getColumn(end));
+	}
 }
