@@ -1,5 +1,6 @@
 package com.blisek.compiler_jftt.ast;
 
+import com.blisek.compiler_jftt.Compiler;
 import com.blisek.compiler_jftt.context.Context;
 import com.blisek.compiler_jftt.structs.VDeclaration;
 import com.blisek.compiler_jftt.structs.VariableInfo;
@@ -27,7 +28,8 @@ public class ProgramExpression extends SingleExpression {
 
 	private void markDeclaredVariables() {
 		for(VDeclaration vd : declarations.getVdeclarations()) {
-			System.out.println("Delaration: " + vd.getVarName());
+			if(Compiler.debugMode)
+				System.out.println("Delaration: " + vd.getVarName());
 			VariableInfo var = VariableInfo.of(vd.getVarName());
 			var.setLength(vd.getLength());
 			var.setVariableDeclared(true);
